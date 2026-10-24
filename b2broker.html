@@ -1,0 +1,2047 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>B2broker · Petr Petryaev</title>
+<meta name="description" content="B2broker — a case study by Petr Petryaev, product designer." />
+<meta name="theme-color" content="#FAFAFA" media="(prefers-color-scheme: light)" />
+<meta name="theme-color" content="#0E0E0E" media="(prefers-color-scheme: dark)" />
+<meta name="color-scheme" content="light dark" />
+<link rel="canonical" href="https://petryaev.site/b2broker.html" />
+<link rel="icon" type="image/svg+xml" href="favicon.svg?v=2" />
+<link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png?v=2" />
+<link rel="apple-touch-icon" href="apple-touch-icon.png?v=2" />
+<meta property="og:type" content="article" />
+<meta property="og:site_name" content="Petr Petryaev" />
+<meta property="og:title" content="B2broker · Petr Petryaev" />
+<meta property="og:description" content="B2broker — a case study by Petr Petryaev, product designer." />
+<meta property="og:url" content="https://petryaev.site/b2broker.html" />
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:title" content="B2broker · Petr Petryaev" />
+<meta name="twitter:description" content="B2broker — a case study by Petr Petryaev, product designer." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&display=block" rel="stylesheet" />
+<style>html.fonts-pending{visibility:hidden}</style>
+<script>
+  document.documentElement.classList.add('fonts-pending');
+  var __reveal = function(){ document.documentElement.classList.remove('fonts-pending'); };
+  if (document.fonts && document.fonts.ready) {
+    document.fonts.ready.then(__reveal);
+    setTimeout(__reveal, 1500); // safety: don't block forever
+  } else {
+    __reveal();
+  }
+</script>
+<!-- SHARED:CSS -->
+<style>
+/* ────────────────────────────────────────────────
+   Shared styles for all internal project pages.
+   Edit here to change ALL project pages at once.
+   ──────────────────────────────────────────────── */
+
+:root {
+  --bg: #FAFAFA;
+  --bg-2: oklch(0.965 0.006 80);
+  --fg: oklch(0.18 0.012 60);
+  --fg-2: oklch(0.42 0.012 60);
+  --fg-3: oklch(0.62 0.010 60);
+  --rule: oklch(0.18 0.012 60 / 0.14);
+  --rule-strong: oklch(0.18 0.012 60 / 0.30);
+  --accent: oklch(0.30 0.01 60);
+  --sans: "Instrument Sans", ui-sans-serif, system-ui, sans-serif;
+  --mono: "Instrument Sans", ui-sans-serif, system-ui, sans-serif;
+}
+[data-theme="dark"] {
+  --bg: oklch(0.14 0.008 70);
+  --bg-2: oklch(0.19 0.010 70);
+  --fg: oklch(0.96 0.004 85);
+  --fg-2: oklch(0.76 0.008 70);
+  --fg-3: oklch(0.56 0.008 70);
+  --rule: oklch(0.96 0.004 85 / 0.14);
+  --rule-strong: oklch(0.96 0.004 85 / 0.30);
+  --accent: oklch(0.72 0.15 55);
+}
+[data-accent="cobalt"]     { --accent: oklch(0.55 0.14 255); }
+[data-accent="moss"]       { --accent: oklch(0.55 0.10 145); }
+[data-accent="plum"]       { --accent: oklch(0.50 0.14 330); }
+[data-accent="ink"]        { --accent: oklch(0.30 0.01 60); }
+[data-theme="dark"][data-accent="ink"] { --accent: oklch(0.85 0.01 60); }
+[data-accent="terracotta"] { --accent: oklch(0.58 0.14 45); }
+
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+body {
+  background: var(--bg); color: var(--fg);
+  font-family: var(--sans); font-size: 16px; line-height: 22px;
+  -webkit-font-smoothing: antialiased;
+}
+a { color: inherit; text-decoration: none; }
+::selection { background: var(--fg); color: var(--bg); }
+::-moz-selection { background: var(--fg); color: var(--bg); }
+
+.wrap { max-width: 1280px; margin: 0 auto; padding: 0 48px; }
+@media (max-width: 720px) { .wrap { padding: 0 20px; } }
+@media (max-width: 400px) { .wrap { padding: 0 16px; } }
+
+/* ───── Header ───── */
+header.site {
+  position: sticky; top: 0; z-index: 50;
+  backdrop-filter: blur(16px) saturate(1.2);
+  -webkit-backdrop-filter: blur(16px) saturate(1.2);
+  background: color-mix(in oklab, var(--bg) 78%, transparent);
+  border-bottom: 1px solid var(--rule);
+}
+header.site .inner { display: flex; align-items: center; justify-content: space-between; height: 72px; }
+.brand { display: flex; align-items: center; gap: 10px; font-weight: 600; font-size: 15px; letter-spacing: -0.01em; }
+.brand .mark { width: 36px; height: 36px; display: grid; place-items: center; color: var(--fg); }
+.brand .mark svg { display: block; }
+nav.site { display: flex; align-items: center; gap: 4px; }
+nav.site a {
+  padding: 8px 14px; border-radius: 999px; font-size: 14px; font-weight: 500;
+  color: var(--fg-2); transition: color 0.2s, background 0.2s;
+}
+nav.site a:hover { color: var(--fg); background: var(--bg-2); }
+nav.site a.cta { background: var(--fg); color: var(--bg); font-weight: 500; margin-left: 10px; padding: 10px 16px; }
+nav.site a.cta:hover { background: var(--accent); color: var(--bg); }
+
+/* Lang switch */
+.lang {
+  font-family: var(--mono); font-size: 11px;
+  color: var(--fg-2); letter-spacing: 0.08em; text-transform: uppercase;
+  border-left: 1px solid var(--rule); padding-left: 14px; margin-left: 6px;
+}
+.lang .lng {
+  background: none; border: 0; padding: 0; margin: 0;
+  font: inherit; color: var(--fg-2); cursor: pointer;
+  letter-spacing: 0.08em; text-transform: uppercase;
+  transition: color 0.2s ease;
+}
+.lang .lng:hover { color: var(--fg); }
+
+/* Theme toggle */
+.theme-toggle {
+  position: relative;
+  width: 36px; height: 36px; padding: 0;
+  display: inline-grid; place-items: center;
+  background: transparent; border: 0; border-radius: 999px;
+  color: var(--fg-2); cursor: pointer;
+  margin-left: 18px;
+  transition: color 0.2s ease, background 0.2s ease;
+  overflow: hidden;
+}
+.theme-toggle:hover { color: var(--fg); background: var(--bg-2); }
+.theme-toggle .ic {
+  position: absolute; inset: 0; margin: auto;
+  transition: opacity 0.35s ease, transform 0.45s cubic-bezier(.4,0,.2,1);
+}
+.theme-toggle .ic-moon  { opacity: 1; transform: rotate(0deg)   scale(1); }
+.theme-toggle .ic-sun { opacity: 0; transform: rotate(-90deg) scale(0.6); }
+[data-theme="dark"] .theme-toggle .ic-moon  { opacity: 0; transform: rotate(90deg)  scale(0.6); }
+[data-theme="dark"] .theme-toggle .ic-sun { opacity: 1; transform: rotate(0deg)   scale(1); }
+
+.p-hero { padding: 64px 0 56px; max-width: 800px; margin: 0 auto; }
+.p-title {
+  font-family: var(--sans); font-weight: 500;
+  font-size: 22px;
+  line-height: 1.2; letter-spacing: -0.02em;
+  text-align: left;
+  margin: 0 0 24px;
+  color: var(--fg);
+  max-width: none;
+}
+.p-hero-meta {
+  display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 32px;
+  margin-top: 24px;
+}
+.p-hero-meta > div .label {
+  font-family: var(--mono); font-size: 11px; letter-spacing: 0.10em;
+  text-transform: uppercase; color: var(--fg-3); margin-bottom: 10px;
+}
+.p-hero-meta > div .val { font-size: 15px; color: var(--fg); line-height: 1.4; }
+.p-hero-meta > div .val strong { font-weight: 600; }
+.p-hero-meta > div .val .sub { color: var(--fg-3); }
+@media (max-width: 900px) { .p-hero-meta { grid-template-columns: 1fr 1fr; } }
+
+/* legacy / fallback — kept for back-compat if any page still uses these */
+.p-meta {
+  display: flex; flex-wrap: wrap; gap: 18px; align-items: center;
+  font-family: var(--mono); font-size: 11px; letter-spacing: 0.12em;
+  text-transform: uppercase; color: var(--fg-3);
+  margin: 32px 0 0;
+}
+.p-meta .sep { opacity: 0.5; }
+.p-meta .dot { color: var(--accent); }
+.p-date {
+  font-family: var(--sans); font-weight: 500;
+  font-size: 16px; line-height: 22px; letter-spacing: -0.1px;
+  color: var(--fg-3);
+  margin: 0;
+}
+.p-sub {
+  font-size: 15px; line-height: 1.5;
+  color: var(--fg-2); max-width: 56ch; margin: 0;
+}
+
+/* ───── Long-read article ───── */
+.article { padding-top: 40px; padding-bottom: 120px; }
+
+.col {
+  max-width: 800px; margin: 0 auto;
+  font-size: 16px; line-height: 22px; color: var(--fg);
+}
+.col p { margin: 0 0 20px; }
+.col p.lede {
+  font-size: 16px; line-height: 22px; color: var(--fg);
+  margin-bottom: 20px;
+  font-weight: 400;
+}
+.col a { color: var(--fg); border-bottom: 1px solid var(--rule-strong); }
+.col a:hover { color: var(--accent); border-bottom-color: var(--accent); }
+.col h2 {
+  font-family: var(--sans); font-weight: 600;
+  font-size: 20px; line-height: 1.3; letter-spacing: -0.015em;
+  margin: 48px 0 18px; color: #000000;
+}
+.col h2.section {
+  font-size: 20px;
+  margin: 64px 0 18px;
+}
+.col h3 {
+  font-family: var(--sans); font-weight: 500;
+  font-size: 16px; line-height: 22px; letter-spacing: -0.1px;
+  margin: 36px 0 12px; color: #000000;
+}
+[data-theme="dark"] .col h2,
+[data-theme="dark"] .col h3 { color: var(--fg); }
+.col em { font-style: italic; color: var(--fg); }
+.col strong { font-weight: 600; }
+.col ol, .col ul { padding-left: 20px; margin: 0 0 28px; color: var(--fg-2); }
+.col li { margin-bottom: 8px; }
+
+/* Divider */
+hr.div {
+  border: 0; border-top: 1px solid var(--rule);
+  max-width: 800px; margin: 72px auto;
+}
+
+/* Media blocks */
+.media { margin: 56px auto; max-width: 800px; }
+.media.narrow { max-width: 360px; }
+.media.wide   { max-width: 800px; }
+.media.col    { max-width: 800px; }
+
+.phone-slot {
+  position: relative;
+  aspect-ratio: 9 / 19.5;
+  max-width: 320px;
+  margin: 0 auto;
+  background: var(--bg-2);
+  border-radius: 40px;
+  border: 1px solid var(--rule);
+  display: grid; place-items: center;
+  font-family: var(--mono); font-size: 11px; color: var(--fg-3);
+  letter-spacing: 0.1em; text-transform: uppercase;
+}
+.phone-pair {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 32px; max-width: 720px; margin: 0 auto;
+}
+.img-slot {
+  position: relative;
+  aspect-ratio: 16 / 10;
+  background: var(--bg-2);
+  border-radius: 14px;
+  border: 1px solid var(--rule);
+  display: grid; place-items: center;
+  font-family: var(--mono); font-size: 11px; color: var(--fg-3);
+  letter-spacing: 0.1em; text-transform: uppercase;
+}
+.img-slot.tall { aspect-ratio: 4 / 5; }
+.img-slot.square { aspect-ratio: 1 / 1; }
+
+/* Real images in .media blocks */
+.media-img {
+  display: block;
+  width: 100%; height: auto;
+  border-radius: 10px;
+  background: #F0F0F0;
+  border: 1px solid var(--rule);
+}
+[data-theme="dark"] .media-img { background: #252420; }
+.phone-pair .media-img {
+  border-radius: 10px;
+  width: 100%;
+}
+.media-img-tall { max-width: 520px; margin: 0 auto; }
+
+.caption {
+  font-family: var(--mono); font-size: 12px;
+  color: var(--fg-3); text-align: center;
+  margin-top: 20px; letter-spacing: 0.04em;
+}
+
+/* Footer */
+footer.site {
+  background: var(--bg); color: var(--fg);
+  padding: 40px 0 48px;
+  margin-top: 24px;
+}
+footer.site .wrap {
+  display: flex; flex-wrap: wrap; gap: 24px;
+  justify-content: space-between; align-items: center;
+  border-top: 1px solid var(--rule); padding-top: 40px;
+}
+footer.site .links {
+  display: flex; flex-wrap: wrap; gap: 28px;
+  font-size: 15px; color: var(--fg-2);
+}
+footer.site .links a { color: var(--fg-2); transition: color 0.2s; }
+footer.site .links a:hover { color: var(--fg); }
+footer.site .copy { font-size: 13px; color: var(--fg-3); }
+
+/* ───── Project navigation (prev / next) ───── */
+.p-nav {
+  max-width: 960px; margin: 96px auto 48px;
+  border-top: 1px solid var(--rule);
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  padding-top: 40px;
+}
+.p-nav a {
+  display: block; padding: 0;
+  color: var(--fg);
+}
+.p-nav a.next { text-align: right; }
+.p-nav .p-nav-kicker {
+  font-family: var(--sans); font-weight: 400;
+  font-size: 16px; line-height: 22px;
+  color: var(--fg-3);
+  margin-bottom: 4px;
+  letter-spacing: 0;
+  text-transform: none;
+}
+.p-nav .p-nav-title {
+  font-family: var(--sans); font-weight: 500;
+  font-size: 16px; line-height: 22px; letter-spacing: -0.1px;
+  color: var(--fg);
+  margin: 0;
+  transition: color .2s ease;
+}
+.p-nav a:hover .p-nav-title { color: var(--accent); }
+
+/* Hover preview on prev/next nav */
+.p-nav a { position: relative; }
+.p-nav a .preview {
+  position: absolute;
+  bottom: calc(100% + 16px);
+  width: 220px; aspect-ratio: 4 / 3;
+  border-radius: 10px; overflow: hidden;
+  border: 1px solid var(--rule); background: var(--bg-2);
+  opacity: 0; pointer-events: none;
+  transform: translateY(8px) scale(0.96);
+  transition: opacity 0.25s ease, transform 0.3s cubic-bezier(.2,.8,.2,1);
+  z-index: 5;
+}
+.p-nav a.prev .preview { left: 0; }
+.p-nav a.next .preview { right: 0; }
+.p-nav a:hover .preview { opacity: 1; transform: translateY(0) scale(1); }
+.p-nav a .preview img { width: 100%; height: 100%; object-fit: cover; display: block; }
+@media (max-width: 720px) { .p-nav a .preview { display: none; } }
+@media (max-width: 640px) {
+  .p-nav { grid-template-columns: 1fr; gap: 10px; padding-top: 24px; }
+  .p-nav a {
+    padding: 14px 48px 14px 18px;
+    border: 1px solid var(--rule);
+    border-radius: 12px;
+    background: var(--bg-2);
+    position: relative;
+    text-align: left;
+  }
+  .p-nav a.prev { padding: 14px 18px 14px 48px; }
+  .p-nav a.next { padding: 14px 48px 14px 18px; text-align: left; }
+  .p-nav a::after {
+    content: "→"; position: absolute; top: 50%; right: 18px;
+    transform: translateY(-50%);
+    color: var(--fg-3); font-size: 18px; line-height: 1;
+    transition: color .2s ease, transform .2s ease;
+  }
+  .p-nav a.prev::after { content: "←"; left: 18px; right: auto; }
+  .p-nav a:hover::after { color: var(--accent); }
+}
+
+/* ───── Mobile polish ───── */
+@media (max-width: 720px) {
+  header.site .inner { height: 60px; }
+  nav.site { gap: 2px; }
+  nav.site a { padding: 6px 10px; font-size: 13px; }
+  nav.site a.cta { margin-left: 4px; padding: 8px 12px; font-size: 13px; }
+  .lang { padding-left: 10px; margin-left: 2px; }
+  .theme-toggle { width: 32px; height: 32px; margin-left: 2px; }
+  .brand { font-size: 14px; }
+  .brand .mark { width: 30px; height: 30px; }
+
+  .p-hero { padding: 40px 0 32px; }
+  .p-hero-meta { grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 18px; }
+  .p-hero-meta > div .label { margin-bottom: 6px; }
+
+  .col { font-size: 15px; line-height: 1.5; }
+  hr.div { margin: 48px auto; }
+
+  .media { margin: 36px auto; }
+  .phone-pair { grid-template-columns: 1fr; gap: 24px; max-width: 320px; }
+  .phone-slot { max-width: 280px; }
+  .caption { font-size: 12px; }
+
+  .p-nav { margin: 64px auto 36px; padding-top: 28px; gap: 24px; }
+  .p-nav .p-nav-title, .p-nav .p-nav-kicker { font-size: 15px; line-height: 20px; }
+
+  footer.site { padding: 28px 0 32px; }
+  footer.site .wrap { padding-top: 28px; gap: 16px; }
+}
+
+@media (max-width: 420px) {
+  nav.site a.nav-link { display: none; }
+  .p-hero-meta { grid-template-columns: 1fr; }
+}
+@media (max-width: 360px) {
+  .lang { display: none; }
+}
+
+/* ───── Page-transition progress bar ───── */
+#__petr_nprog {
+  position: fixed;
+  left: 0; right: 0;
+  top: 70px;
+  height: 2px;
+  transform-origin: 0 0;
+  transform: scaleX(0);
+  background: var(--accent, var(--fg));
+  opacity: 1;
+  z-index: 1000;
+  pointer-events: none;
+  will-change: transform, opacity;
+}
+@media (max-width: 720px) {
+  #__petr_nprog { top: 58px; }
+}
+
+/* ───── Video speed control overlay ───── */
+.video-wrap { position: relative; display: block; }
+.speed-btn {
+  position: absolute;
+  top: 12px; right: 12px;
+  background: transparent;
+  color: #111;
+  border: 0;
+  padding: 6px 10px;
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  font-weight: 500;
+  border-radius: 999px;
+  cursor: pointer;
+  z-index: 2;
+  backdrop-filter: blur(0px);
+  -webkit-backdrop-filter: blur(0px);
+  transition: background 0.15s ease, backdrop-filter 0.15s ease, -webkit-backdrop-filter 0.15s ease, transform 0.1s ease, opacity 0.2s ease;
+  opacity: 0.85;
+  min-width: 38px;
+  text-align: center;
+  -webkit-tap-highlight-color: transparent;
+}
+.speed-btn:hover {
+  background: rgba(0, 0, 0, 0.16);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  opacity: 1;
+}
+.speed-btn .x { display: inline-block; transform: translateY(0.12em); line-height: 1; }
+.speed-btn:active { transform: scale(0.94); }
+
+/* ───── Old / New segmented control (under the image) ───── */
+.media-toggle {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.media-toggle .ba-stack { width: 100%; order: 0; }
+.media-toggle .ba-tabs  { order: 1; }
+.media-toggle .caption  { order: 2; }
+
+.ba-tabs {
+  display: inline-flex;
+  gap: 2px;
+  padding: 4px;
+  margin: 16px 0 0;
+  background: var(--bg-2);
+  border: 1px solid var(--rule);
+  border-radius: 999px;
+}
+[data-theme="dark"] .ba-tabs {
+  background: color-mix(in oklab, var(--bg-2) 70%, transparent);
+}
+.ba-tab {
+  appearance: none;
+  background: transparent;
+  border: 0;
+  padding: 6px 16px;
+  font: inherit;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--fg-3);
+  border-radius: 999px;
+  cursor: pointer;
+  transition: background 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
+}
+.ba-tab:hover:not(.is-active) { color: var(--fg-2); }
+.ba-tab.is-active {
+  background: var(--bg);
+  color: var(--fg);
+  box-shadow: 0 1px 2px rgba(0,0,0,0.06);
+}
+[data-theme="dark"] .ba-tab.is-active {
+  background: oklch(0.25 0.010 70);
+  box-shadow: 0 1px 2px rgba(0,0,0,0.3);
+}
+.ba-stack { position: relative; }
+.ba-img {
+  width: 100%;
+  height: auto;
+  display: block;
+  border-radius: 10px;
+  background: #F0F0F0;
+  border: 1px solid var(--rule);
+}
+[data-theme="dark"] .ba-img { background: #252420; }
+.ba-stack > .ba-img + .ba-img {
+  position: absolute;
+  inset: 0;
+}
+.ba-img:not(.is-active) {
+  opacity: 0;
+  pointer-events: none;
+}
+.ba-img.is-active {
+  opacity: 1;
+  transition: opacity 0.3s ease;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* ───── Editorial components (b2broker) ───── */
+
+/* Lede: opens the article. Larger and looser than body so the eye
+   immediately reads it as the opener, not as the first paragraph. */
+.col p.lede {
+  font-size: 18px;
+  line-height: 1.55;
+  color: var(--fg);
+  font-weight: 400;
+  margin-bottom: 32px;
+}
+@media (max-width: 720px) {
+  .col p.lede { font-size: 17px; line-height: 1.5; margin-bottom: 24px; }
+}
+
+/* Big-number callouts in a horizontal strip */
+.stat-strip {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0;
+  margin: 16px 0 8px;
+}
+.stat-strip .stat {
+  padding: 16px 20px;
+}
+.stat-strip .stat:first-child  { padding-left: 0; }
+.stat-strip .stat:last-child   { padding-right: 0; }
+.stat-strip .stat .num {
+  font-family: var(--sans);
+  font-weight: 500;
+  font-size: 40px;
+  line-height: 1;
+  letter-spacing: -0.02em;
+  color: var(--fg);
+  margin-bottom: 10px;
+}
+.stat-strip .stat .num .delta {
+  color: var(--fg-3);
+  font-weight: 400;
+}
+.stat-strip .stat .label {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--fg-3);
+  line-height: 1.4;
+}
+@media (max-width: 720px) {
+  .stat-strip { grid-template-columns: 1fr; gap: 24px; }
+  .stat-strip .stat { padding: 0; }
+  .stat-strip .stat .num { font-size: 30px; }
+}
+
+/* Single big-number callout (used inline in a section) */
+.stat-callout {
+  display: grid;
+  grid-template-columns: minmax(140px, auto) 1fr;
+  align-items: start;
+  column-gap: 32px;
+  padding: 16px 0 16px;
+  margin: 8px 0 24px;
+}
+.stat-callout .num {
+  font-family: var(--sans);
+  font-weight: 500;
+  font-size: 64px;
+  line-height: 1;
+  letter-spacing: -0.03em;
+  color: var(--fg);
+  white-space: nowrap;
+}
+.stat-callout .text {
+  font-size: 15px;
+  line-height: 1.5;
+  color: var(--fg-2);
+  padding-top: 6px;
+}
+@media (max-width: 720px) {
+  .stat-callout { grid-template-columns: 1fr; gap: 12px; padding: 8px 0 8px; }
+  .stat-callout .num { font-size: 48px; }
+  .stat-callout .text { padding-top: 0; }
+}
+
+/* Research-method tiles */
+.method-tiles {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  margin: 16px 0 8px;
+}
+.method-tiles .mt {
+  border: 1px solid var(--rule);
+  border-radius: 12px;
+  padding: 18px 18px 20px;
+  background: color-mix(in oklab, var(--bg-2) 30%, transparent);
+}
+.method-tiles .mt .mt-kicker {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.10em;
+  text-transform: uppercase;
+  color: var(--fg-3);
+  margin-bottom: 10px;
+}
+.method-tiles .mt .mt-title {
+  font-size: 16px;
+  line-height: 1.3;
+  font-weight: 500;
+  color: var(--fg);
+  margin-bottom: 8px;
+}
+.method-tiles .mt .mt-note {
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--fg-2);
+}
+@media (max-width: 720px) {
+  .method-tiles { grid-template-columns: 1fr; }
+}
+
+/* Three-insight grid */
+.insight-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  margin: 16px 0 8px;
+}
+.insight-grid .ig {
+  border: 1px solid var(--rule);
+  border-radius: 12px;
+  padding: 20px 20px 22px;
+  background: color-mix(in oklab, var(--bg-2) 40%, transparent);
+  display: flex;
+  flex-direction: column;
+}
+.insight-grid .ig .ig-num {
+  font-family: var(--sans);
+  font-weight: 500;
+  font-size: 22px;
+  line-height: 1;
+  letter-spacing: -0.02em;
+  color: var(--fg-3);
+  margin-bottom: 14px;
+}
+.insight-grid .ig .ig-title {
+  font-size: 16px;
+  line-height: 1.3;
+  font-weight: 500;
+  color: var(--fg);
+  margin-bottom: 8px;
+}
+.insight-grid .ig .ig-note {
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--fg-2);
+  margin-bottom: 14px;
+  flex: 1;
+}
+.insight-grid .ig .ig-source {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.10em;
+  text-transform: uppercase;
+  color: var(--fg-3);
+}
+@media (max-width: 720px) {
+  .insight-grid { grid-template-columns: 1fr; }
+}
+
+/* Lesson row — 2 cards on this page */
+.lesson-row {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+  margin: 16px 0 8px;
+}
+.lesson-row .ls {
+  border: 1px solid var(--rule);
+  border-radius: 12px;
+  padding: 22px 22px 24px;
+  background: color-mix(in oklab, var(--bg-2) 30%, transparent);
+}
+.lesson-row .ls .ls-num {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.10em;
+  text-transform: uppercase;
+  color: var(--fg-3);
+  margin-bottom: 14px;
+}
+.lesson-row .ls .ls-title {
+  font-size: 16px;
+  line-height: 1.3;
+  font-weight: 500;
+  color: var(--fg);
+  margin-bottom: 8px;
+}
+.lesson-row .ls .ls-note {
+  font-size: 13px;
+  line-height: 1.55;
+  color: var(--fg-2);
+}
+@media (max-width: 720px) {
+  .lesson-row { grid-template-columns: 1fr; }
+}
+
+/* Inline pull-quote on its own line, used as a callout sentence */
+.col p.pullquote {
+  font-size: 22px;
+  line-height: 1.35;
+  font-weight: 500;
+  letter-spacing: -0.015em;
+  color: var(--fg);
+  margin: 40px 0;
+  padding-left: 18px;
+  border-left: 2px solid var(--fg);
+}
+
+/* Small note card — disclaimer / honesty note */
+.note-card {
+  border: 1px solid var(--rule);
+  border-radius: 12px;
+  padding: 16px 18px;
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--fg-2);
+  background: color-mix(in oklab, var(--bg-2) 25%, transparent);
+  margin: 16px 0 8px;
+}
+.note-card .nc-kicker {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.10em;
+  text-transform: uppercase;
+  color: var(--fg-3);
+  margin-bottom: 6px;
+}
+
+/* Linked card — link to a sibling case (deposit deep-dive) */
+.link-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  padding: 18px 22px;
+  border: 1px solid var(--rule);
+  border-radius: 12px;
+  background: color-mix(in oklab, var(--bg-2) 30%, transparent);
+  margin: 16px 0 8px;
+  transition: border-color .25s ease, transform .25s ease;
+}
+.link-card:hover {
+  border-color: var(--rule-strong);
+  transform: translateY(-1px);
+}
+.link-card .lc-text { display: flex; flex-direction: column; gap: 4px; }
+.link-card .lc-kicker {
+  font-family: var(--mono); font-size: 10px;
+  letter-spacing: 0.10em; text-transform: uppercase;
+  color: var(--fg-3);
+}
+.link-card .lc-title {
+  font-size: 15px; font-weight: 500; color: var(--fg);
+}
+.link-card .lc-arrow { font-size: 16px; color: var(--fg-3); }
+.col a.link-card { border-bottom: 1px solid var(--rule); }
+.col a.link-card:hover { color: var(--fg); border-bottom-color: var(--rule-strong); }
+
+/* ───────── Reveal-on-load / scroll ───────── */
+@media (prefers-reduced-motion: no-preference) {
+  .reveal {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  .reveal.is-in {
+    animation: __reveal .55s cubic-bezier(.2,.7,.2,1) both;
+    animation-delay: var(--reveal-delay, 0ms);
+  }
+  @keyframes __reveal {
+    from { opacity: 0; transform: translateY(10px); }
+    to   { opacity: 1; transform: none; }
+  }
+}
+
+</style>
+<!-- /SHARED:CSS -->
+<!-- Yandex.Metrika counter -->
+<script type="text/javascript">
+(function(m,e,t,r,i,k,a){m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+m[i].l=1*new Date();
+for (var j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
+k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)})
+(window, document, "script", "https://mc.yandex.ru/metrika/tag.js", "ym");
+ym(108676934, "init", {clickmap:true,trackLinks:true,accurateTrackBounce:true,webvisor:true});
+</script>
+<noscript><div><img src="https://mc.yandex.ru/watch/108676934" style="position:absolute; left:-9999px;" alt="" / loading="lazy" decoding="async"></div></noscript>
+<!-- /Yandex.Metrika counter -->
+<!-- CASE:CSS -->
+<style>
+/* Case pages: one text system and slide "plates" (see _lab/lis-style.html).
+   Type 44 · 24 · 20 · 16 · 14, weights 400/600, no uppercase labels.
+   One 1184 grid for text and images: 12 columns, 32px gutters, a shared left edge.
+   Text runs 6 columns (608), facts sit in columns 9–12. Spacing: 8/16/24/32/48/64/128. */
+main.article { --case-frame: 1184px; --case-main: 608px; --case-wide: 1184px; }
+
+/* header: light name, bold descriptor, then Summary | facts under hairlines */
+main .p-hero {
+  max-width: var(--case-frame); margin: 0 auto; padding: 64px 0 0;
+  display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: 32px; align-items: start;
+}
+main .p-hero .p-title, main .p-hero .p-sub {
+  grid-column: 1 / -1; margin: 0; max-width: none;
+  font-family: var(--sans); font-size: 44px; line-height: 1.08; letter-spacing: -0.025em;
+  font-weight: 600; color: var(--fg);
+}
+main .p-hero.has-sub .p-title { font-weight: 400; color: var(--fg-3); }
+main .p-hero .p-summary { grid-column: 1 / span 6; }
+main .p-hero .p-hero-meta { grid-column: 9 / span 4; display: grid; grid-template-columns: 1fr; gap: 20px; }
+main .p-hero .p-summary, main .p-hero .p-hero-meta { margin-top: 48px; padding-top: 24px; border-top: 1px solid var(--rule-strong); }
+main .p-hero .p-summary-k, main .p-hero .p-hero-meta > div .label {
+  font-family: var(--sans); font-size: 14px; line-height: 1.4; font-weight: 600;
+  letter-spacing: 0; text-transform: none; color: var(--fg); margin: 0 0 6px;
+}
+main .p-hero .p-summary p.lede { font-size: 20px; line-height: 1.5; font-weight: 400; color: var(--fg); margin: 0; }
+main .p-hero .p-summary p.lede ~ p { font-size: 16px; line-height: 1.6; color: var(--fg); margin: 16px 0 0; }
+main .p-hero .p-hero-meta > div .val { font-size: 16px; line-height: 1.5; }
+main .p-hero .p-hero-meta > div .val strong { font-weight: 400; }
+
+/* text */
+main .col { max-width: var(--case-frame); font-size: 16px; line-height: 1.6; }
+main .col > p, main .col > ul, main .col > ol, main .col > h3 { max-width: var(--case-main); }
+main .col p { margin: 0 0 16px; }
+main .col p.lede { font-size: 20px; line-height: 1.5; }
+main .col h2, main .col h2.section {
+  font-family: var(--sans); font-size: 24px; line-height: 1.25; font-weight: 600; letter-spacing: -0.01em;
+  color: var(--fg); margin: 128px 0 32px; padding-bottom: 16px; border-bottom: 1px solid var(--rule-strong);
+}
+main .col h3 { font-size: 16px; line-height: 1.4; font-weight: 600; }
+main .col > ul, main .col > .mfold > ul { list-style: none; padding: 0; }
+main .col > ul > li, main .col > .mfold > ul > li { position: relative; padding-left: 18px; }
+main .col > ul > li + li, main .col > .mfold > ul > li + li { margin-top: 6px; }
+main .col > ul > li::before, main .col > .mfold > ul > li::before { content: "–"; position: absolute; left: 0; color: var(--fg-3); }
+
+/* numbers */
+/* a row of numbers is its own block: space and a hairline above, three columns = 4 grid columns each */
+main .stat-strip { gap: 32px; margin: 48px 0 16px; padding-top: 24px; border-top: 1px solid var(--rule); }
+main .stat-callout { margin: 48px 0 16px; }
+main .stat-strip .stat { padding: 0; }
+main .stat-strip .stat .num, main .stat-callout .num {
+  font-family: var(--sans); font-size: 44px; line-height: 1.05; font-weight: 600; letter-spacing: -0.025em; color: var(--fg);
+}
+main .stat-strip .stat .num { margin-bottom: 10px; }
+main .stat-strip .stat .label {
+  font-family: var(--sans); font-size: 14px; line-height: 1.45; letter-spacing: 0; text-transform: none; color: var(--fg-2);
+}
+main .stat-callout .text { font-size: 16px; line-height: 1.6; color: var(--fg-2); }
+
+/* tiles, insights, lessons, quotes → a numbered grid, no boxes.
+   Full selector chains: the older page CSS uses three-class selectors. */
+main .method-tiles, main .insight-grid, main .lesson-row, main .quote-grid { gap: 48px 32px; margin: 48px 0 16px; }
+main .method-tiles .mt, main .insight-grid .ig, main .lesson-row .ls, main .quote-grid .qc {
+  border: 0; border-radius: 0; padding: 0; background: none; box-shadow: none;
+}
+main .method-tiles .mt .mt-kicker, main .insight-grid .ig .ig-num, main .lesson-row .ls .ls-num,
+main .insight-grid .ig .ig-source, main .note-card .nc-kicker, main .quote-grid .qc .qc-tag, main .link-card .lc-kicker {
+  font-family: var(--sans); font-size: 14px; line-height: 1.4; font-weight: 400;
+  letter-spacing: 0; text-transform: none; color: var(--fg-3); margin-bottom: 4px;
+}
+main .method-tiles .mt .mt-title, main .insight-grid .ig .ig-title, main .lesson-row .ls .ls-title, main .link-card .lc-title {
+  font-size: 16px; line-height: 1.4; font-weight: 600; color: var(--fg); margin-bottom: 4px;
+}
+main .method-tiles .mt .mt-note, main .insight-grid .ig .ig-note, main .lesson-row .ls .ls-note,
+main .quote-grid .qc .qc-note, main .quote-grid .qc .qc-quote { font-size: 16px; line-height: 1.6; color: var(--fg); }
+main .insight-grid .ig .ig-source { margin: 8px 0 0; }
+
+main .col p.pullquote {
+  font-size: 24px; line-height: 1.4; font-weight: 400; letter-spacing: -0.01em;
+  border: 0; padding: 0; margin: 64px 0; max-width: 780px;  /* 8 columns */
+}
+main .note-card { border: 0; background: none; padding: 0; max-width: var(--case-main); font-size: 14px; line-height: 1.5; color: var(--fg-3); }
+/* link to another case: a framed button, lines the colour of the dividers, radius of the plates.
+   Page CSS has `.col a.link-card { border-bottom: … }` — match its specificity. */
+main .link-card, main .col a.link-card {
+  border: 1px solid var(--rule-strong); border-radius: 18px; background: none;
+  padding: 20px 24px; max-width: none;  /* full grid width */
+  transition: border-color .2s ease;
+}
+main .link-card:hover, main .col a.link-card:hover { transform: none; border-color: var(--fg-3); }
+main .link-card .lc-arrow { transition: transform .2s ease; }
+main .link-card:hover .lc-arrow { transform: translateX(4px); }
+
+/* images: a slide is the plate — same width and radius as the LIS plates */
+main .media, main .media.wide, main .media.col { max-width: var(--case-wide); margin: 64px auto; }
+main .media .media-img, main .ba-img { border-radius: 18px; border: 1px solid var(--rule); }
+main .caption {
+  font-family: var(--sans); font-size: 14px; line-height: 1.5; letter-spacing: 0; text-transform: none;
+  color: var(--fg-3); text-align: center; max-width: 780px; margin: 16px auto 0;  /* 8 columns, centred */
+}
+
+/* prev / next */
+main .p-nav { max-width: var(--case-frame); }
+main .p-nav .p-nav-kicker { font-family: var(--sans); font-size: 14px; letter-spacing: 0; text-transform: none; color: var(--fg-3); }
+main .p-nav .p-nav-title { font-size: 16px; font-weight: 600; }
+
+/* text sections (variant B): every section is a row of the page grid, like the header's summary | facts —
+   a hairline on top, the heading in columns 1–4, the text in columns 5–11. One paragraph or five look the same,
+   nothing hangs in half the page, and the text starts where the second of three cards does. Phones keep the
+   heading above the text. */
+@media (min-width: 901px) {
+  main .col:has(> h2:first-child) {
+    display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: 32px; align-items: start;
+    border-top: 1px solid var(--rule-strong); padding-top: 24px; margin-top: 128px;
+  }
+  main .col:has(> h2:first-child) > h2:first-child {
+    grid-column: 1 / span 4; grid-row: 1 / span 40; margin: 0 !important; padding: 0 !important; border: 0 !important;
+  }
+  main .col:has(> h2:first-child) > :not(h2:first-child) { grid-column: 5 / span 7; max-width: none !important; }
+  main .col:has(> h2:first-child) > p { margin: 0 0 16px !important; }
+  main .col:has(> h2:first-child) > :last-child { margin-bottom: 0 !important; }
+  /* text without a heading of its own (a paragraph after a picture, a closing quote) stays in the text column */
+  main .col:has(> p:first-child), main .col:has(> ul:first-child) {
+    display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: 32px;
+  }
+  main .col:has(> p:first-child) > *, main .col:has(> ul:first-child) > * { grid-column: 5 / span 7; max-width: none !important; }
+}
+/* sub-sections (an h3 that opens a .col, e.g. one scenario of a flow): the same two fields as a section,
+   without the hairline — heading in columns 1–4, text in columns 5–11 */
+@media (min-width: 901px) {
+  main .col:has(> h3:first-child) {
+    display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: 32px; align-items: start; margin-top: 96px;
+  }
+  main .col:has(> h3:first-child) > h3:first-child { grid-column: 1 / span 4; grid-row: 1 / span 40; margin: 0; }
+  main .col:has(> h3:first-child) > :not(h3:first-child) { grid-column: 5 / span 7; max-width: none !important; }
+  main .col:has(> h3:first-child) > :last-child { margin-bottom: 0; }
+}
+
+/* MacBook carousel, the module from flowhealth-lis.html: 1440×935 screens inside assets/devices/macbook-pro.svg on a
+   tinted plate, arrows beside the laptop, "1 / N" and the screen's title under it; a click zooms the screen.
+   Phones keep the laptop on a slimmer plate and zoom a screen on tap. Markup: _tools/build_motorsport_flow.py. */
+main { --plate: oklch(0.935 0.008 80); --shot-shadow: 0 1px 2px rgba(0,0,0,.06), 0 14px 36px -14px rgba(0,0,0,.24); }
+[data-theme="dark"] main { --plate: oklch(0.235 0.008 70); --shot-shadow: 0 1px 2px rgba(0,0,0,.4), 0 18px 44px -14px rgba(0,0,0,.7); }
+main .m-laptop { max-width: var(--case-wide); margin: 48px auto 0; background: var(--plate); border-radius: 18px; padding: 56px 64px 32px; }
+main .mbp { position: relative; max-width: 1056px; margin: 0 auto; aspect-ratio: 1116.55 / 745.80; }
+main .mbp-device { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
+[data-theme="dark"] main .mbp-device { filter: brightness(.62); }
+main .mbp-screen {
+  position: absolute; left: 6.6746%; top: 3.4862%; width: 86.6061%; height: 84.2048%;
+  overflow: hidden; background: #fff; border-radius: 1.4478% 1.4478% 0 0 / 2.2293% 2.2293% 0 0;
+}
+main .mbp-screen .shot { position: absolute; inset: 0; overflow: hidden; }
+main .mbp-screen .shot[hidden] { display: none; }
+main .lt-img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: top; cursor: zoom-in; }
+main .lt-img:focus-visible { outline: 2px solid var(--fg); outline-offset: 3px; }
+main .car-btn {
+  position: absolute; top: 45.59%; transform: translateY(-50%); appearance: none; width: 44px; height: 44px; border-radius: 999px;
+  cursor: pointer; border: 1px solid var(--rule-strong); background: var(--bg); color: var(--fg); font: inherit; font-size: 14px;
+}
+main .car-btn:hover { border-color: var(--fg-3); }
+main .car-prev { left: -54px; }   /* centred in the plate's 64px side padding */
+main .car-next { right: -54px; }
+main .car-bar { display: contents; }
+main .car-bar .car-btn { display: none; }
+main .car-cap { max-width: 86.61%; margin: 20px auto 0; text-align: center; font-size: 14px; line-height: 1.45; color: var(--fg-2); }
+main .car-count { margin-right: 10px; color: var(--fg-3); font-variant-numeric: tabular-nums; }
+main .m-laptop[data-n="1"] .car-btn, main .m-laptop[data-n="1"] .car-count { display: none !important; }
+.case-lb { position: fixed; inset: 0; z-index: 2000; overflow: auto; display: grid; place-items: start center; padding: 48px 24px; background: rgba(12,12,11,.92); cursor: zoom-out; }
+.case-lb[hidden] { display: none; }
+.case-lb img { max-width: min(100%, 1440px); height: auto; border-radius: 6px; }
+.case-lb-close {
+  position: fixed; top: 12px; right: 12px; width: 44px; height: 44px; border: 0; border-radius: 999px; cursor: pointer;
+  background: rgba(255,255,255,.14); color: #fff; font: inherit; font-size: 24px; line-height: 1;
+}
+@media (max-width: 900px) {
+  main .mbp .car-btn { display: none; }
+  main .car-bar { display: grid; grid-template-columns: 44px minmax(0, 1fr) 44px; align-items: center; column-gap: 8px; margin-top: 16px; }
+  main .car-bar .car-btn { display: block; position: static; transform: none; }
+  main .car-bar .car-cap { max-width: none; margin: 0; }
+  main .m-laptop { padding: 36px 24px 24px; border-radius: 14px; }
+}
+@media (max-width: 600px) {
+  main .m-laptop { padding: 20px 12px 12px; border-radius: 12px; }
+  .case-lb { padding: 64px 16px 24px; place-items: start start; }
+  .case-lb img { max-width: none; width: 900px; }
+}
+
+/* the section's hairline is the only rule: no second line over the numbers, no frame round the pictures */
+main .stat-strip { border-top: 0; padding-top: 0; }
+main .media .media-img, main .ba-img { border: 0; }
+
+@media (max-width: 900px) {
+  main .p-hero { grid-template-columns: 1fr; padding-top: 40px; }
+  main .p-hero .p-summary, main .p-hero .p-hero-meta { grid-column: 1 / -1; }
+  main .p-hero .p-title, main .p-hero .p-sub { font-size: 34px; }
+  main .p-hero .p-summary, main .p-hero .p-hero-meta { margin-top: 32px; }
+  main .col h2, main .col h2.section { margin-top: 88px; }
+  main .stat-strip .stat .num, main .stat-callout .num { font-size: 36px; }
+  main .media .media-img, main .ba-img { border-radius: 12px; }
+}
+/* Case packages with «Было» / «Стало» rows (isp-cabinet; the flowhealth-lis export format).
+   Each row: its label, then a MacBook carousel; the old screens carry numbered red dots over the clean frame,
+   their notes sit under the laptop and follow the slide; zoom opens the frame with the numbers baked in. */
+main .ba-row { max-width: var(--case-wide); margin: 64px auto 0; }
+main .ba-row + .ba-row { margin-top: 48px; }
+main .ba-row .row-head { margin: 0 0 12px; font-size: 14px; line-height: 1.5; color: var(--fg-2); }
+main .ba-row .row-head b { font-weight: 600; color: var(--fg); }
+main .ba-row .m-laptop { margin-top: 0; }
+main .mbp-screen .shot { container-type: inline-size; }  /* the dots scale with the screen, not the page */
+main .dot {
+  display: inline-grid; place-items: center; flex: none; width: 24px; height: 24px; border-radius: 50%;
+  background: #E5383B; color: #fff; font-size: 12px; font-weight: 600; line-height: 1; font-variant-numeric: tabular-nums;
+}
+main .mbp-screen .shot .dot {
+  position: absolute; transform: translate(-50%, -50%); border: 2px solid #fff; box-shadow: 0 1px 4px rgba(0,0,0,.25);
+  width: clamp(14px, 2.4cqi, 24px); height: clamp(14px, 2.4cqi, 24px); font-size: clamp(8px, 1.2cqi, 12px); border-width: clamp(1px, .2cqi, 2px);
+}
+main .callout-notes { list-style: none; padding: 0; width: fit-content; max-width: 86.61%; margin: 16px auto 0; font-size: 14px; line-height: 1.5; color: var(--fg-2); }
+main .callout-notes[hidden] { display: none; }
+main .callout-notes li { display: flex; gap: 10px; align-items: flex-start; }
+main .callout-notes li + li { margin-top: 8px; }
+main .callout-notes .dot { width: 20px; height: 20px; font-size: 11px; margin-top: 1px; }
+/* a case's text column: its lever, "what I did", the before → after pairs, a benchmark with its source */
+main .col .lever { font-size: 14px; color: var(--fg-2); }
+main .col .lever b { font-weight: 600; color: var(--fg); }
+main .col:has(> h2:first-child) > .mini, main .col > .mfold > .mini { margin: 24px 0 8px !important; font-size: 14px; font-weight: 600; }  /* beats the column's p margin */
+main .col .nums { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 32px; margin: 32px 0 0; }
+main .num-from, main .num-to, main .num-label { display: block; }
+main .num-from { font-size: 14px; line-height: 1.4; color: var(--fg-3); }
+main .num-to { margin: 4px 0 8px; font-size: 36px; line-height: 1.1; font-weight: 600; letter-spacing: -0.025em; }
+main .num-label { font-size: 14px; line-height: 1.45; color: var(--fg-2); }
+main .col:has(> h2:first-child) > .bench, main .col > .mfold > .bench { margin: 24px 0 0 !important; font-size: 14px; line-height: 1.5; color: var(--fg-3); }
+main .col .bench b { display: block; font-weight: 600; color: var(--fg-2); }
+main .col .bench a { color: var(--fg-2); text-decoration: underline; text-underline-offset: 3px; white-space: nowrap; }
+/* Phones fold long text (details.mfold, as on flowhealth-lis): a section's or a case's text sits under a
+   «Читать» line, so the laptops come up quickly. Wider screens keep every fold open and its line hidden. */
+main details.mfold > summary { list-style: none; }
+main details.mfold > summary::-webkit-details-marker { display: none; }
+main .col > details.mfold > p { margin: 0 0 16px; }
+main .col > details.mfold > :last-child { margin-bottom: 0; }
+main details.mfold--wide { max-width: var(--case-wide); margin: 32px auto 0; }
+main details.mfold--wide > .dtable-wrap { margin-top: 0; }
+@media (min-width: 601px) { main details.mfold > summary { display: none; } }
+@media (max-width: 600px) {
+  main details.mfold > summary {
+    display: flex; justify-content: space-between; align-items: center; padding: 14px 16px; cursor: pointer;
+    border: 1px solid var(--rule-strong); border-radius: 12px; font-size: 15px; font-weight: 600; color: var(--fg);
+  }
+  main details.mfold > summary::after { content: "↓"; color: var(--fg-3); }
+  main details.mfold[open] > summary { margin-bottom: 24px; }
+  main details.mfold[open] > summary::after { content: "↑"; }
+  main details.mfold--wide { margin-top: 16px; }
+}
+/* a table under its section heading, the whole frame wide; phones read it row by row */
+main .dtable-wrap { max-width: var(--case-wide); margin: 32px auto 0; }
+main .dtable { width: 100%; border-collapse: collapse; font-size: 15px; line-height: 1.5; }
+main .dtable th, main .dtable td { text-align: left; vertical-align: top; padding: 16px 32px 16px 0; border-top: 1px solid var(--rule); }
+main .dtable thead th { padding-top: 0; border-top: 0; font-size: 14px; font-weight: 400; color: var(--fg-3); }
+main .dtable tbody th { width: 16%; font-weight: 600; }
+main .dtable td { width: 28%; color: var(--fg-2); }
+main .dtable tr > :last-child { padding-right: 0; }
+/* a picture inside a section's text column (a tall one, like a component sheet) */
+main .col .col-figure { margin: 32px 0 0; }
+main .col .col-figure img { display: block; width: 100%; height: auto; border-radius: 12px; }
+main img[data-zoom] { cursor: zoom-in; }
+@media (max-width: 720px) {
+  main .dtable thead { display: none; }
+  main .dtable, main .dtable tbody, main .dtable tr, main .dtable th, main .dtable td { display: block; width: auto; }
+  main .dtable tr { padding: 16px 0; border-top: 1px solid var(--rule); }
+  main .dtable th, main .dtable td { border: 0; padding: 0; }
+  main .dtable tbody th, main .dtable td { width: auto; }  /* the desktop column widths don't apply to a stacked row */
+  main .dtable tbody tr:first-child { border-top: 0; padding-top: 0; }  /* the section's rule is right above */
+  main .dtable td { margin-top: 10px; }
+  main .dtable td::before { content: attr(data-label-en); display: block; font-size: 13px; color: var(--fg-3); }
+  html:lang(ru) main .dtable td::before { content: attr(data-label-ru); }
+  main .col .nums { grid-template-columns: 1fr; gap: 20px; }
+  main .num-to { font-size: 30px; }
+  main .ba-row { margin-top: 48px; }
+}
+</style>
+<!-- /CASE:CSS -->
+</head>
+<body data-screen-label="B2broker · Project">
+
+<header class="site"></header>
+
+<main class="wrap article">
+
+  <!-- Hero (rendered by project-shared.js from window.PAGE) -->
+  <section class="p-hero" id="p-hero"></section>
+
+  <!-- Lead -->
+  <div class="col reveal">
+    <p class="lede" data-i18n-en="August 2025. B2Core — B2broker's flagship white-label product — had three platforms (iOS, Android, web) that had quietly drifted apart over the years, each evolving largely on its own. Different tokens, different components for the same input, different patterns for the same flow. The brief said redesign. The first job was to build the system the redesign would stand on." data-i18n-ru="Август 2025. B2Core — флагманский white-label-продукт B2broker — состоял из трёх платформ (iOS, Android, веб), которые за годы потихоньку разошлись: каждая развивалась во многом своими силами. Разные токены, разные компоненты под один и тот же инпут, разные паттерны под один и тот же сценарий. В задаче было слово «редизайн». Первой работой стало собрать систему, на которой редизайн будет стоять.">August 2025. B2Core — B2broker's flagship white-label product — had three platforms (iOS, Android, web) that had quietly drifted apart over the years, each evolving largely on its own. Different tokens, different components for the same input, different patterns for the same flow. The brief said redesign. The first job was to build the system the redesign would stand on.</p>
+  </div>
+  <!-- Context -->
+  <div class="col reveal">
+    <h2 class="section" data-i18n-en="Context" data-i18n-ru="Контекст">Context</h2>
+    <p data-i18n-en="At the time of the redesign I was the senior product designer on B2Core specifically — B2broker's flagship product, the one we sell to 100+ brokers as a white-label solution. Each broker gets a tenant of the same engine with their own colours, logo, and tone. The redesign couldn't be a one-shot visual — it had to be a system flexible enough to dress itself differently for every broker that bought it." data-i18n-ru="На момент редизайна я был старшим продуктовым дизайнером именно по B2Core — флагманскому продукту B2broker, который мы продаём 100+ брокерам как white-label-продукт. Каждый брокер получает арендованный экземпляр одного движка со своими цветами, логотипом и тоном. Редизайн не мог быть разовой перекраской — это должна была быть система, гибкая настолько, чтобы переодеваться под каждого брокера, который её купит.">At the time of the redesign I was the senior product designer on B2Core specifically — B2broker's flagship product, the one we sell to 100+ brokers as a white-label solution. Each broker gets a tenant of the same engine with their own colours, logo, and tone. The redesign couldn't be a one-shot visual — it had to be a system flexible enough to dress itself differently for every broker that bought it.</p>
+    <p data-i18n-en="B2Core packages a stack of modules. There's the personal cabinet, the financial operations module (deposits, withdrawals, internal transfers, currency exchange), a trading layer with the built-in terminal plus integrations with cTrader and MetaTrader 4 and 5, in-app savings for clients who want yield on idle balances, and IB Room — the referral programme partners use to onboard new clients." data-i18n-ru="B2Core упаковывает стек модулей. Личный кабинет, модуль финансовых операций (депозиты, выводы, внутренние переводы, обмен валют), торговый слой со встроенным терминалом и интеграциями со сторонними платформами вроде cTrader и MetaTrader 4 и 5, сейвинги — доход на свободном балансе для клиентов, и IB Room — реферальная программа для партнёров, приводящих новых клиентов.">B2Core packages a stack of modules. There's the personal cabinet, the financial operations module (deposits, withdrawals, internal transfers, currency exchange), a trading layer with the built-in terminal plus integrations with cTrader and MetaTrader 4 and 5, in-app savings for clients who want yield on idle balances, and IB Room — the referral programme partners use to onboard new clients.</p>
+  </div>
+  <div class="col reveal">
+    <div class="stat-strip">
+      <div class="stat">
+        <div class="num" data-i18n-en="3" data-i18n-ru="3">3</div>
+        <div class="label" data-i18n-en="Platforms — iOS · Android · Web" data-i18n-ru="Платформы — iOS · Android · Веб">Platforms — iOS · Android · Web</div>
+      </div>
+      <div class="stat">
+        <div class="num" data-i18n-en="1 <span class='delta'>→</span> 5" data-i18n-ru="1 <span class='delta'>→</span> 5">1 <span class='delta'>→</span> 5</div>
+        <div class="label" data-i18n-en="Designers on the project, before → after" data-i18n-ru="Дизайнеров на проекте, до → после">Designers on the project, before → after</div>
+      </div>
+      <div class="stat">
+        <div class="num" data-i18n-en="100+" data-i18n-ru="100+">100+</div>
+        <div class="label" data-i18n-en="Brokers running B2Core under their own brand" data-i18n-ru="Брокеров с B2Core под своим брендом">Brokers running B2Core under their own brand</div>
+      </div>
+    </div>
+  </div>
+  <!-- Where I started -->
+  <div class="col reveal">
+    <h2 class="section" data-i18n-en="Where I started" data-i18n-ru="С чего я начал">Where I started</h2>
+    <p data-i18n-en="Phase one started with research — not sketches, not a moodboard. Three lanes ran in parallel: a cross-platform inventory of what we shipped, Amplitude analytics on what users actually did with it, and a competitor audit of how similar apps solved the same things. They were chosen so each lane would fail differently — the patterns that survived all three were the ones worth acting on." data-i18n-ru="Первая фаза началась с исследования — не с эскизов, не с мудборда. Параллельно шли три ветки: кроссплатформенный аудит того, что мы выпускаем, Amplitude-аналитика того, как пользователи на самом деле этим пользуются, и аудит конкурентов — как похожие приложения решают те же задачи. Ветки выбирал так, чтобы каждая «ошибалась» по-своему — паттерны, выжившие во всех трёх, заведомо стоили того, чтобы по ним что-то делать.">Phase one started with research — not sketches, not a moodboard. Three lanes ran in parallel: a cross-platform inventory of what we shipped, Amplitude analytics on what users actually did with it, and a competitor audit of how similar apps solved the same things. They were chosen so each lane would fail differently — the patterns that survived all three were the ones worth acting on.</p>
+  </div>
+  <div class="col reveal">
+    <div class="method-tiles">
+      <div class="mt">
+        <div class="mt-kicker" data-i18n-en="Inventory" data-i18n-ru="Инвентаризация">Inventory</div>
+        <div class="mt-title" data-i18n-en="Cross-platform audit" data-i18n-ru="Кроссплатформенный аудит">Cross-platform audit</div>
+        <div class="mt-note" data-i18n-en="Pulled every screen across iOS, Android, and the web into one canvas, listed every component, every variant, every token, every icon. The drift between platforms became impossible to dismiss." data-i18n-ru="Стянул все экраны iOS, Android и веба в одно полотно, выписал каждый компонент, каждый вариант, каждый токен, каждую иконку. Расхождение между платформами стало невозможно игнорировать.">Pulled every screen across iOS, Android, and the web into one canvas, listed every component, every variant, every token, every icon. The drift between platforms became impossible to dismiss.</div>
+      </div>
+      <div class="mt">
+        <div class="mt-kicker" data-i18n-en="User behaviour" data-i18n-ru="Поведение пользователей">User behaviour</div>
+        <div class="mt-title" data-i18n-en="Amplitude analytics" data-i18n-ru="Аналитика Amplitude">Amplitude analytics</div>
+        <div class="mt-note" data-i18n-en="Pulled real session data — which functions matter most day-to-day, what users search for on Home, where they tap, which daily operations carry weight. The priorities went straight into the visual hierarchy." data-i18n-ru="Доставал реальные сессии — какие функции важнее всего в ежедневной работе, что пользователи ищут на главном экране, куда нажимают, какие ежедневные операции несут вес. Приоритеты переехали прямо в визуальную иерархию.">Pulled real session data — which functions matter most day-to-day, what users search for on Home, where they tap, which daily operations carry weight. The priorities went straight into the visual hierarchy.</div>
+      </div>
+      <div class="mt">
+        <div class="mt-kicker" data-i18n-en="Market patterns" data-i18n-ru="Рыночные паттерны">Market patterns</div>
+        <div class="mt-title" data-i18n-en="Competitor audit" data-i18n-ru="Аудит конкурентов">Competitor audit</div>
+        <div class="mt-note" data-i18n-en="Kraken, Binance, Bybit, Revolut, and a long tail of similar apps. Many patterns got rebuilt around the muscle memory users already have from those apps, not invented from scratch." data-i18n-ru="Kraken, Binance, Bybit, Revolut и длинный хвост похожих приложений. Многие паттерны пересобрал по тому, как пользователи привыкли действовать в этих приложениях, а не выдумывал с нуля.">Kraken, Binance, Bybit, Revolut, and a long tail of similar apps. Many patterns got rebuilt around the muscle memory users already have from those apps, not invented from scratch.</div>
+      </div>
+    </div>
+  </div>
+  <!-- Three insights from the audit -->
+  <div class="col reveal">
+    <h2 class="section" data-i18n-en="Three pictures the inventory drew" data-i18n-ru="Три картины, которые нарисовала инвентаризация">Three pictures the inventory drew</h2>
+    <p data-i18n-en="The cross-platform audit alone painted three patterns. They weren't surprising — they were everywhere — but seeing them on one wall made them impossible to dismiss." data-i18n-ru="Один только кроссплатформенный аудит дал три устойчивые картины. Не то чтобы неожиданные — они были видны на каждом втором экране — но в одной стопке их уже не получалось игнорировать.">The cross-platform audit alone painted three patterns. They weren't surprising — they were everywhere — but seeing them on one wall made them impossible to dismiss.</p>
+  </div>
+  <div class="col reveal">
+    <div class="insight-grid">
+      <div class="ig">
+        <div class="ig-num">01</div>
+        <div class="ig-title" data-i18n-en="Component sprawl" data-i18n-ru="Расплодившиеся компоненты">Component sprawl</div>
+        <div class="ig-note" data-i18n-en="Same input lived in three or four shapes within one platform. Multiplied across iOS / Android / Web, the count ran into the dozens." data-i18n-ru="Один и тот же инпут существовал в трёх-четырёх вариантах внутри одной платформы. Помножьте на iOS / Android / веб — и счёт уходит на десятки.">Same input lived in three or four shapes within one platform. Multiplied across iOS / Android / Web, the count ran into the dozens.</div>
+        <div class="ig-source" data-i18n-en="Library audit · per platform" data-i18n-ru="Аудит библиотеки · на платформу">Library audit · per platform</div>
+      </div>
+      <div class="ig">
+        <div class="ig-num">02</div>
+        <div class="ig-title" data-i18n-en="Tokens out of sync" data-i18n-ru="Токены не сходились">Tokens out of sync</div>
+        <div class="ig-note" data-i18n-en="Three palette sets, three type scales, three spacing scales. The same brand read differently depending on which platform rendered it." data-i18n-ru="Три набора палитры, три шкалы шрифтов, три шкалы отступов. Один и тот же бренд читался по-разному в зависимости от того, на какой платформе на него смотришь.">Three palette sets, three type scales, three spacing scales. The same brand read differently depending on which platform rendered it.</div>
+        <div class="ig-source" data-i18n-en="Style audit · cross-platform" data-i18n-ru="Аудит стилей · кроссплатформенный">Style audit · cross-platform</div>
+      </div>
+      <div class="ig">
+        <div class="ig-num">03</div>
+        <div class="ig-title" data-i18n-en="Icons drawn for the earlier brief" data-i18n-ru="Иконки под прежний бриф">Icons drawn for the earlier brief</div>
+        <div class="ig-note" data-i18n-en="The icon set was the one piece already unified across all three platforms — the same glyphs everywhere. It had been drawn for an earlier visual brief; the new system was heading toward a different vocabulary, so the set needed a restyle, not a deduplication." data-i18n-ru="Набор иконок — единственный кусок, уже унифицированный между всеми тремя платформами: те же глифы везде. Его рисовали под прежний визуальный бриф; новая система шла к другому словарю — значит, набору нужен был рестайл, а не сведение вариантов.">The icon set was the one piece already unified across all three platforms — the same glyphs everywhere. It had been drawn for an earlier visual brief; the new system was heading toward a different vocabulary, so the set needed a restyle, not a deduplication.</div>
+        <div class="ig-source" data-i18n-en="Icon set · ready for restyle" data-i18n-ru="Набор иконок · под рестайл">Icon set · ready for restyle</div>
+      </div>
+    </div>
+  </div>
+  <!-- Decision 1 -->
+  <div class="col reveal">
+    <h2 class="section" data-i18n-en="Decision 1 — collapse the sprawl" data-i18n-ru="Решение №1 — сжать раздутый набор">Decision 1 — collapse the sprawl</h2>
+    <p data-i18n-en="I started by squeezing the variant explosion. Every primitive that appeared more than once across platforms got collapsed into a single canonical version — one input, one button, one card. Visual differences that had felt platform-specific turned out to be different versions of the same thing." data-i18n-ru="Начал с того, что сократил количество вариантов. Каждый примитив, встречавшийся больше одного раза, свёл к одной канонической версии — один инпут, одна кнопка, одна карточка. То, что выглядело как платформо-специфичные различия, на поверку оказывалось просто разными вариантами одного компонента.">I started by squeezing the variant explosion. Every primitive that appeared more than once across platforms got collapsed into a single canonical version — one input, one button, one card. Visual differences that had felt platform-specific turned out to be different versions of the same thing.</p>
+    <p data-i18n-en="The icon set was already shared across all three platforms — the one piece that hadn't drifted. What it needed wasn't deduplication, it was a restyle: those icons had been drawn for an earlier visual brief, and the new system was building toward a different vocabulary. The whole set got redrawn to share the new system's language — same stroke weight, same corner rules, same metaphors as the rest of the visual layer. Then I built the minimum-viable base: the smallest set of components that could lay out the main screens. Not a full library — a working starter pack. The library expanded later, when the main flows proved the shape of the system." data-i18n-ru="Набор иконок уже был общим для всех трёх платформ — единственный кусок, который не разъехался. Ему нужна была не дедупликация, а рестайл: эти иконки рисовали под прежний визуальный бриф, а новая система шла к другому словарю. Весь набор перерисовал, чтобы он разделял язык новой системы — той же толщины штриха, тех же правил скруглений, тех же метафор, что и остальной визуальный слой. Потом собрал MVP-базу: минимальный набор компонентов, которого хватает, чтобы сверстать основные экраны. Не полная библиотека — стартер-пак. Дальше покрытие расширялось, когда основные сценарии подтверждали форму системы.">The icon set was already shared across all three platforms — the one piece that hadn't drifted. What it needed wasn't deduplication, it was a restyle: those icons had been drawn for an earlier visual brief, and the new system was building toward a different vocabulary. The whole set got redrawn to share the new system's language — same stroke weight, same corner rules, same metaphors as the rest of the visual layer. Then I built the minimum-viable base: the smallest set of components that could lay out the main screens. Not a full library — a working starter pack. The library expanded later, when the main flows proved the shape of the system.</p>
+  </div>
+  <!-- Decision 2 -->
+  <div class="col reveal">
+    <h2 class="section" data-i18n-en="Decision 2 — a customisation layer for white-label" data-i18n-ru="Решение №2 — слой кастомизации под white-label">Decision 2 — a customisation layer for white-label</h2>
+    <p data-i18n-en="White-label means every broker buys the same product and wants to look like only they run it. The customisation layer carries the parts that change between brokers: brand palette, accent, typography choices within a tight set, illustration tone, shape language. Everything else stays in the shared engine." data-i18n-ru="White-label означает: каждый брокер покупает один и тот же продукт и хочет, чтобы продукт выглядел так, будто его делает только он. Слой кастомизации хранит то, что меняется от брокера к брокеру: бренд-палитру, акцент, выбор типографики в пределах фиксированного набора, тон иллюстраций, язык форм. Всё остальное живёт в общем движке.">White-label means every broker buys the same product and wants to look like only they run it. The customisation layer carries the parts that change between brokers: brand palette, accent, typography choices within a tight set, illustration tone, shape language. Everything else stays in the shared engine.</p>
+    <p data-i18n-en="The pay-off: a new broker brand stopped being a multi-week design project. It became a theme file and a config. Same engine, repainted." data-i18n-ru="Что это даёт: новый бренд брокера перестал быть многонедельным дизайн-проектом. Это файл темы и конфиг. Тот же движок — в новых цветах.">The pay-off: a new broker brand stopped being a multi-week design project. It became a theme file and a config. Same engine, repainted.</p>
+  </div>
+  <!-- Home -->
+  <div class="col reveal">
+    <h2 class="section" data-i18n-en="Home — what mattered, surfaced" data-i18n-ru="Главный экран — главное наверх">Home — what mattered, surfaced</h2>
+    <p data-i18n-en="The old home was a wall of tiles — every feature shouting from the same square. A new user couldn't tell what mattered. Amplitude told a clearer story than any opinion in the room: most opens went to checking the balance and the last operation, and most taps clustered around the same four-or-five daily actions. Everything else was edge traffic." data-i18n-ru="Старый главный был стеной из плиток — каждая фича боролась за одну и ту же клетку. Новый пользователь не понимал, что тут главное. Amplitude ответил чётче, чем любая внутренняя дискуссия: большую часть открытий приложения люди делают, чтобы проверить баланс и последнюю операцию, а большая часть тапов держится вокруг одних и тех же четырёх-пяти ежедневных действий. Остальное — края трафика.">The old home was a wall of tiles — every feature shouting from the same square. A new user couldn't tell what mattered. Amplitude told a clearer story than any opinion in the room: most opens went to checking the balance and the last operation, and most taps clustered around the same four-or-five daily actions. Everything else was edge traffic.</p>
+    <p data-i18n-en="The redesign separates blocks visually and functionally by that priority: balance and recent operations on top, wallets in a carousel, services below. Two legacy elements got retired without replacement — a banner that pushed users out of the app to the web, and a pie chart that looked beautiful but never explained what its colours meant. Money — the reason people open this app — sits where the eye lands first." data-i18n-ru="Редизайн разделяет блоки и визуально, и функционально по этому приоритету: баланс и последние операции — сверху, кошельки в карусели, сервисы — ниже. Два легаси-элемента ушли без замены: баннер, который уводил пользователя из приложения на веб, и пай-чарт, который красиво выглядел, но никогда не объяснял, что значат его цвета. Деньги — то, ради чего люди открывают приложение, — лежат там, куда падает глаз первым.">The redesign separates blocks visually and functionally by that priority: balance and recent operations on top, wallets in a carousel, services below. Two legacy elements got retired without replacement — a banner that pushed users out of the app to the web, and a pie chart that looked beautiful but never explained what its colours meant. Money — the reason people open this app — sits where the eye lands first.</p>
+  </div>
+  <div class="media reveal">
+    <img width="1602" height="1172" src="assets/b2broker/bb-home-cmp.jpg" class="media-img" loading="lazy" decoding="async" alt="B2broker home screen — before and after, side by side">
+    <div class="caption" data-i18n-en="Home screen — before and after." data-i18n-ru="Главный экран — до и после.">Home screen — before and after.</div>
+  </div>
+  <div class="media reveal">
+    <div class="video-wrap">
+      <video width="1280" height="936" src="assets/b2broker/bb-001.mp4" class="media-img" autoplay loop muted playsinline preload="metadata"
+             aria-label="B2broker home screen" data-i18n-aria-en="B2broker home screen" data-i18n-aria-ru="B2broker — главный экран"></video>
+      <button class="speed-btn" type="button" aria-label="Playback speed">1<span class="x">×</span></button>
+    </div>
+    <div class="caption" data-i18n-en="Home — wallets, trading accounts, and recent operations one tap away." data-i18n-ru="Главный — кошельки, торговые счета и последние операции на расстоянии одного касания.">Home — wallets, trading accounts, and recent operations one tap away.</div>
+  </div>
+  <!-- Onboarding & registration -->
+  <div class="col reveal">
+    <h2 class="section" data-i18n-en="Onboarding and registration — first impression, repaired" data-i18n-ru="Онбординг и регистрация — починили первое впечатление">Onboarding and registration — first impression, repaired</h2>
+    <p data-i18n-en="At first launch the user has two things to get through: the introduction and the signup. Both used to be heavy. The new onboarding leans on the broker's actual config — only the features that broker has enabled show up on the first screens, so we never promise something the broker doesn't ship. And instead of a generic 'welcome' carousel, the intro doubles as a quick tour of what the app can actually do — by the time someone taps 'Create account', they've already seen the real features in motion, not a slideshow of icons." data-i18n-ru="На первом запуске пользователю предстоит пройти два шага подряд: знакомство и регистрацию. Раньше оба были перегружены. Новый онбординг подстраивается под конфигурацию брокера — на первых экранах видно только те функции, которые у конкретного брокера включены, и мы не обещаем того, чего у него в реальности нет. И вместо стандартного приветственного слайдера онбординг сразу показывает, что приложение умеет: к моменту, когда пользователь нажимает «зарегистрироваться», он уже видел живые функции, а не парад иконок.">At first launch the user has two things to get through: the introduction and the signup. Both used to be heavy. The new onboarding leans on the broker's actual config — only the features that broker has enabled show up on the first screens, so we never promise something the broker doesn't ship. And instead of a generic 'welcome' carousel, the intro doubles as a quick tour of what the app can actually do — by the time someone taps 'Create account', they've already seen the real features in motion, not a slideshow of icons.</p>
+    <p data-i18n-en="Registration was the heaviest part of the old flow: branching, repeated fields, unclear states. We trimmed it down. Fewer steps overall, and the secondary questions that used to pile onto a brand-new user on day one moved out of the signup and into the profile screen, where they belong. What stayed in registration is only what a broker actually needs to onboard someone — one decision per screen, visible progress, inline validation. By the time engineering instrumented the new flow, the old drop-off pattern had quietly stopped showing up." data-i18n-ru="Регистрация была самым тяжёлым местом в старом флоу: ветвления, повторяющиеся поля, непонятные состояния. Её серьёзно подрезали. Во-первых, сократили количество шагов. Во-вторых, второстепенные вопросы, которыми раньше засыпали пользователя при первом заходе, переехали на экран профиля — туда, где им и место. В самой регистрации осталось только то, без чего брокер реально не может онбордить клиента: одно решение на экран, виден прогресс, валидация прямо в поле. Когда разработка поставила метрики на новый флоу, прежние отвалы уже не повторялись.">Registration was the heaviest part of the old flow: branching, repeated fields, unclear states. We trimmed it down. Fewer steps overall, and the secondary questions that used to pile onto a brand-new user on day one moved out of the signup and into the profile screen, where they belong. What stayed in registration is only what a broker actually needs to onboard someone — one decision per screen, visible progress, inline validation. By the time engineering instrumented the new flow, the old drop-off pattern had quietly stopped showing up.</p>
+  </div>
+  <div class="media reveal">
+    <div class="video-wrap">
+      <video width="1280" height="936" src="assets/b2broker/bb-002.mp4" class="media-img" autoplay loop muted playsinline preload="metadata"
+             aria-label="B2broker onboarding" data-i18n-aria-en="B2broker onboarding" data-i18n-aria-ru="B2broker — онбординг"></video>
+      <button class="speed-btn" type="button" aria-label="Playback speed">1<span class="x">×</span></button>
+    </div>
+    <div class="caption" data-i18n-en="Onboarding — a broker-specific feature tour on first launch." data-i18n-ru="Онбординг — обзор функций конкретного брокера на первом запуске.">Onboarding — a broker-specific feature tour on first launch.</div>
+  </div>
+  <div class="media reveal">
+    <div class="video-wrap">
+      <video width="1280" height="936" src="assets/b2broker/bb-003.mp4" class="media-img" autoplay loop muted playsinline preload="metadata"
+             aria-label="B2broker registration" data-i18n-aria-en="B2broker registration" data-i18n-aria-ru="B2broker — регистрация"></video>
+      <button class="speed-btn" type="button" aria-label="Playback speed">1<span class="x">×</span></button>
+    </div>
+    <div class="caption" data-i18n-en="Registration — linear, stepped, visible progress." data-i18n-ru="Регистрация — линейный пошаговый сценарий с видимым прогрессом.">Registration — linear, stepped, visible progress.</div>
+  </div>
+  <!-- Portfolio -->
+  <div class="col reveal">
+    <h2 class="section" data-i18n-en="Portfolio — one entry to the money model" data-i18n-ru="Портфолио — один вход в денежную модель">Portfolio — one entry to the money model</h2>
+    <p data-i18n-en="Before the redesign, the three things users care about most — wallets, trading accounts, and savings — were scattered across the app, each behind its own entry point in its own corner. The redesign brings all three under one roof. Portfolio is now the single entry to the user's money: wallets, trading accounts, and savings live inside as separate sections, each with its own balances and actions, but the user gets to them by going to one place, not three." data-i18n-ru="До редизайна три самые важные для пользователя вещи — кошельки, торговые счета и сейвинги — были разбросаны по приложению: у каждой был свой вход в своём углу. Редизайн собрал всё это под одну крышу. «Портфолио» — теперь единый вход к деньгам пользователя: кошельки, счета и сейвинги остались внутри отдельными секциями со своими балансами и действиями, но искать их пользователь идёт в одно место, а не в три.">Before the redesign, the three things users care about most — wallets, trading accounts, and savings — were scattered across the app, each behind its own entry point in its own corner. The redesign brings all three under one roof. Portfolio is now the single entry to the user's money: wallets, trading accounts, and savings live inside as separate sections, each with its own balances and actions, but the user gets to them by going to one place, not three.</p>
+  </div>
+  <div class="media reveal">
+    <div class="video-wrap">
+      <video width="1280" height="936" src="assets/b2broker/bb-004.mp4" class="media-img" autoplay loop muted playsinline preload="metadata"
+             aria-label="B2broker portfolio" data-i18n-aria-en="B2broker portfolio" data-i18n-aria-ru="B2broker — портфолио"></video>
+      <button class="speed-btn" type="button" aria-label="Playback speed">1<span class="x">×</span></button>
+    </div>
+    <div class="caption" data-i18n-en="Portfolio — wallets, trading accounts, savings as distinct sections." data-i18n-ru="Портфолио — кошельки, торговые счета и сбережения как отдельные секции.">Portfolio — wallets, trading accounts, savings as distinct sections.</div>
+  </div>
+  <!-- Core financial flows -->
+  <div class="col reveal">
+    <h2 class="section" data-i18n-en="Core flows — one shape, four scenarios" data-i18n-ru="Ключевые сценарии — одна форма, четыре сюжета">Core flows — one shape, four scenarios</h2>
+    <p data-i18n-en="Deposit, withdraw, transfer, exchange — four flows where one wrong tap costs real money. In the old version all four looked and behaved differently: the same essential job, but each scenario had its own form, its own pickers, its own way of showing fees. Users had to relearn the interface every time they switched between them. The redesign builds all four around the same shape and the same component set. The bottom tab bar disappears the moment a flow starts — while the user is moving money, nothing competes for attention. The whole screen is the action." data-i18n-ru="Депозит, вывод, перевод, обмен — четыре сценария, где одно неверное касание стоит реальных денег. В старой версии все четыре выглядели и работали по-разному: задача, по сути, одна, а форма у каждого своя — свои пикеры, своя манера показывать комиссии. Пользователю приходилось каждый раз переучивать интерфейс, когда он переходил из одного сценария в другой. Редизайн собрал все четыре вокруг одной формы и одного набора компонентов. Нижний таб-бар уходит со сцены, как только пользователь зашёл в сценарий: пока человек двигает деньги, его ничто не отвлекает. Весь экран — про действие.">Deposit, withdraw, transfer, exchange — four flows where one wrong tap costs real money. In the old version all four looked and behaved differently: the same essential job, but each scenario had its own form, its own pickers, its own way of showing fees. Users had to relearn the interface every time they switched between them. The redesign builds all four around the same shape and the same component set. The bottom tab bar disappears the moment a flow starts — while the user is moving money, nothing competes for attention. The whole screen is the action.</p>
+    <p data-i18n-en="What's left is one rhythm across all four — pick source, review, confirm — built from the same components: the same amount field, the same fee block, the same currency picker. The shape wasn't something we invented: it's the spine of how Kraken, Binance, Bybit, Revolut and most of the category solve the same task. Leaning on the muscle memory users already have from those apps was cheaper than asking them to learn a new one. The deposit flow got the deepest rework of all four — there's a separate case study below." data-i18n-ru="В остатке у всех четырёх — один ритм: выбор источника, проверка, подтверждение — собранный из одних и тех же компонентов: то же поле суммы, тот же блок комиссии, тот же пикер валют. Эту форму мы не выдумывали: на ней держатся Kraken, Binance, Bybit, Revolut и большая часть категории. Опереться на мышечную память, которая у пользователей уже есть из тех приложений, оказалось дешевле, чем просить их учить новую. На депозитный флоу пришлась самая глубокая переработка из четырёх — на него есть отдельный кейс ниже.">What's left is one rhythm across all four — pick source, review, confirm — built from the same components: the same amount field, the same fee block, the same currency picker. The shape wasn't something we invented: it's the spine of how Kraken, Binance, Bybit, Revolut and most of the category solve the same task. Leaning on the muscle memory users already have from those apps was cheaper than asking them to learn a new one. The deposit flow got the deepest rework of all four — there's a separate case study below.</p>
+  </div>
+  <div class="media reveal media-toggle">
+    <div class="ba-tabs" role="tablist">
+      <button class="ba-tab " type="button" data-ba="before"
+              data-i18n-en="Old" data-i18n-ru="Было">Old</button>
+      <button class="ba-tab is-active" type="button" data-ba="after"
+              data-i18n-en="New" data-i18n-ru="Стало">New</button>
+    </div>
+    <div class="ba-stack">
+      <img class="ba-img is-active" data-ba="after"  width="1602" height="1172" src="assets/b2broker/bb-flow-after.jpg" alt="B2broker — deposit, withdraw, transfer, exchange after the redesign" loading="lazy" decoding="async">
+      <img class="ba-img " data-ba="before" width="1602" height="1172" src="assets/b2broker/bb-flow-before.jpg" alt="B2broker — deposit, withdraw, transfer, exchange before the redesign" loading="lazy" decoding="async">
+    </div>
+    <div class="caption" data-i18n-en="Deposit · Withdraw · Transfer · Exchange — toggle between the legacy version and the redesign." data-i18n-ru="Депозит · Вывод · Перевод · Обмен — переключатель между старой версией и редизайном.">Deposit · Withdraw · Transfer · Exchange — toggle between the legacy version and the redesign.</div>
+  </div>
+  <div class="media reveal">
+    <div class="video-wrap">
+      <video width="1280" height="936" src="assets/b2broker/bb-005.mp4" class="media-img" autoplay loop muted playsinline preload="metadata"
+             aria-label="B2broker — core financial flows" data-i18n-aria-en="B2broker — core financial flows" data-i18n-aria-ru="B2broker — ключевые финансовые сценарии"></video>
+      <button class="speed-btn" type="button" aria-label="Playback speed">1<span class="x">×</span></button>
+    </div>
+    <div class="caption" data-i18n-en="Core flows now share one shape: pick, review, confirm." data-i18n-ru="Ключевые сценарии теперь имеют одну форму: выбор, проверка, подтверждение.">Core flows now share one shape: pick, review, confirm.</div>
+  </div>
+  <div class="col reveal">
+    <a class="link-card" href="b2broker-deposit.html">
+      <div class="lc-text">
+        <span class="lc-kicker" data-i18n-en="Deep-dive case" data-i18n-ru="Зум на один сценарий">Deep-dive case</span>
+        <span class="lc-title" data-i18n-en="B2broker Deposit — lifting first-deposit conversion from 30% to 55%" data-i18n-ru="B2broker Deposit — рост конверсии первого депозита с 30% до 55%">B2broker Deposit — lifting first-deposit conversion from 30% to 55%</span>
+      </div>
+      <span class="lc-arrow">→</span>
+    </a>
+  </div>
+  <!-- Supporting screens -->
+  <div class="col reveal">
+    <h2 class="section" data-i18n-en="Supporting screens — no fallback to legacy" data-i18n-ru="Вспомогательные экраны — без откатов в легаси">Supporting screens — no fallback to legacy</h2>
+    <p data-i18n-en="Settings, notifications, account, support entry — every supporting surface was brought under the new system. The point wasn't novelty. It was removing the last traces of legacy so the edges of the product don't fall back to the old app the moment a user steps off the main path." data-i18n-ru="Настройки, уведомления, профиль, точки входа в поддержку — все вспомогательные экраны переведены на новую систему. Не ради новизны — ради того, чтобы убрать последние следы легаси и края продукта не проваливались в старое приложение, как только пользователь сходит с главной тропы.">Settings, notifications, account, support entry — every supporting surface was brought under the new system. The point wasn't novelty. It was removing the last traces of legacy so the edges of the product don't fall back to the old app the moment a user steps off the main path.</p>
+  </div>
+  <div class="media reveal">
+    <div class="video-wrap">
+      <video width="1280" height="936" src="assets/b2broker/bb-006.mp4" class="media-img" autoplay loop muted playsinline preload="metadata"
+             aria-label="B2broker — supporting screens" data-i18n-aria-en="B2broker — supporting screens" data-i18n-aria-ru="B2broker — вспомогательные экраны"></video>
+      <button class="speed-btn" type="button" aria-label="Playback speed">1<span class="x">×</span></button>
+    </div>
+    <div class="caption" data-i18n-en="Supporting screens under the new system — no fallback to legacy." data-i18n-ru="Вспомогательные экраны — на новой системе, без возврата в легаси.">Supporting screens under the new system — no fallback to legacy.</div>
+  </div>
+  <!-- IB Room -->
+  <div class="col reveal">
+    <h2 class="section" data-i18n-en="IB Room — rebuilt from zero" data-i18n-ru="IB Room — пересобрали с нуля">IB Room — rebuilt from zero</h2>
+    <p data-i18n-en="Brokers don't grow on direct marketing alone — a serious share of new clients comes through partners (introducing brokers, or IBs) who recommend the broker to people in their own networks. When those referred clients start trading, the partner earns a commission. IB Room is the place inside B2Core where those partners live: from here they invite new clients, watch them register and start trading, and track what they're earning for it." data-i18n-ru="Брокеры растут не только за счёт прямого маркетинга — заметная доля новых клиентов приходит через партнёров (introducing broker'ов, IB), которые рекомендуют брокера людям из своих сетей. Когда приведённые клиенты начинают торговать, партнёр получает комиссию. IB Room — это место внутри B2Core, где живут такие партнёры: отсюда они приглашают новых клиентов, видят, как те регистрируются и начинают торговать, и следят за тем, что им за это причитается.">Brokers don't grow on direct marketing alone — a serious share of new clients comes through partners (introducing brokers, or IBs) who recommend the broker to people in their own networks. When those referred clients start trading, the partner earns a commission. IB Room is the place inside B2Core where those partners live: from here they invite new clients, watch them register and start trading, and track what they're earning for it.</p>
+    <p data-i18n-en="In the legacy version, IB Room was the most-complained-about area in the entire product: opaque payouts, monitoring that felt random, a learning curve that scared partners off before they referred anyone. It was the one part where I didn't iterate — I rebuilt it from zero." data-i18n-ru="В старой версии IB Room был самой критикуемой частью всего продукта: непрозрачные выплаты, мониторинг, ощущавшийся случайным, порог входа, отпугивавший партнёров до первого реферала. Это была единственная часть, где я не итерировал — пересобрал с нуля.">In the legacy version, IB Room was the most-complained-about area in the entire product: opaque payouts, monitoring that felt random, a learning curve that scared partners off before they referred anyone. It was the one part where I didn't iterate — I rebuilt it from zero.</p>
+    <p data-i18n-en="Plain-language explanations replaced the technical jargon. The dashboard shows referrals and their activity in real time, not just lump-sum totals. Payouts moved to a predictable view with clear thresholds. Partners who used to give up at the first opaque screen now see, step by step, where their commissions come from." data-i18n-ru="Объяснения простым языком заменили технический жаргон. Дашборд показывает рефералов и их активность в реальном времени, а не только итоговые суммы. Выплаты переехали на предсказуемое представление с прозрачными порогами. Партнёры, которые раньше сдавались на первом непонятном экране, теперь видят пошагово, откуда у них берутся комиссии.">Plain-language explanations replaced the technical jargon. The dashboard shows referrals and their activity in real time, not just lump-sum totals. Payouts moved to a predictable view with clear thresholds. Partners who used to give up at the first opaque screen now see, step by step, where their commissions come from.</p>
+  </div>
+  <div class="media reveal">
+    <div class="video-wrap">
+      <video width="1280" height="936" src="assets/b2broker/bb-007.mp4" class="media-img" autoplay loop muted playsinline preload="metadata"
+             aria-label="B2broker IB Room" data-i18n-aria-en="B2broker IB Room" data-i18n-aria-ru="B2broker — IB Room"></video>
+      <button class="speed-btn" type="button" aria-label="Playback speed">1<span class="x">×</span></button>
+    </div>
+    <div class="caption" data-i18n-en="IB Room — referrals, activity, and payouts in one place." data-i18n-ru="IB Room — рефералы, их активность и выплаты в одном месте.">IB Room — referrals, activity, and payouts in one place.</div>
+  </div>
+  <!-- Support -->
+  <div class="col reveal">
+    <h2 class="section" data-i18n-en="Support, wired to the operation" data-i18n-ru="Поддержка, привязанная к операции">Support, wired to the operation</h2>
+    <p data-i18n-en="Support is the part of a financial app users only meet on a bad day. The redesign rebuilt it around the operation, not around an inbox. From any rejected payment, declined withdrawal, or off-looking trade, a ticket opens already wired to that exact transaction — the support team sees the operation, the wallet, the timestamps without asking. Conversation stays in one thread per ticket." data-i18n-ru="Поддержка в финансовом приложении — это та часть, с которой пользователь сталкивается только в плохой день. Редизайн пересобрал её вокруг операции, а не вокруг инбокса. Из любого отклонённого платежа, отказанного вывода или странной сделки тикет открывается уже привязанным к этой конкретной транзакции: саппорту сразу видна операция, кошелёк и время — ничего не нужно переспрашивать. Переписка идёт в одном треде на тикет.">Support is the part of a financial app users only meet on a bad day. The redesign rebuilt it around the operation, not around an inbox. From any rejected payment, declined withdrawal, or off-looking trade, a ticket opens already wired to that exact transaction — the support team sees the operation, the wallet, the timestamps without asking. Conversation stays in one thread per ticket.</p>
+    <p data-i18n-en="Quick-reply chips — “Why rejected?”, “Send details”, “Check again” — turn the most common follow-ups into a single tap. The Requests screen splits opened from resolved so a live conversation never gets buried in history." data-i18n-ru="Быстрые ответы — «Почему отклонено?», «Отправить детали», «Проверить ещё раз» — превращают самые частые уточнения в одно касание. Экран запросов разделён на открытые и решённые — живой разговор не теряется в истории.">Quick-reply chips — “Why rejected?”, “Send details”, “Check again” — turn the most common follow-ups into a single tap. The Requests screen splits opened from resolved so a live conversation never gets buried in history.</p>
+  </div>
+  <div class="media reveal">
+    <img width="1602" height="1172" src="assets/b2broker/bb-support.jpg" class="media-img" loading="lazy" decoding="async" alt="B2broker — support center, ticket chat, and your requests">
+    <div class="caption" data-i18n-en="Support Center · Ticket chat · Your Requests." data-i18n-ru="Центр поддержки · Чат по тикету · Ваши запросы.">Support Center · Ticket chat · Your Requests.</div>
+  </div>
+  <!-- Cross-platform parity -->
+  <div class="col reveal">
+    <h2 class="section" data-i18n-en="Cross-platform parity" data-i18n-ru="Кроссплатформенный паритет">Cross-platform parity</h2>
+    <p data-i18n-en="In the old product, iOS, Android, and the web had diverged in features as much as in visuals. Some screens only existed on one platform. Some flows behaved differently depending on where the user was logged in. The new system closes that gap. Most components are shared. Only truly platform-specific patterns — share sheets, system pickers, status bars — stay native. A user moving between their phone and the browser recognises the same product, not a reinterpretation of it." data-i18n-ru="В старой версии iOS, Android и веб расходились и по функциям, и по визуалу. Часть экранов существовала только на одной платформе. Часть сценариев вела себя по-разному в зависимости от того, откуда пользователь зашёл. Новая система закрывает этот разрыв: большинство компонентов общие, нативными остаются только паттерны, которые действительно зависят от платформы, — шиты шеринга, системные пикеры, статус-бары. Пользователь, переходящий с телефона на веб, узнаёт тот же продукт, а не его пересказ.">In the old product, iOS, Android, and the web had diverged in features as much as in visuals. Some screens only existed on one platform. Some flows behaved differently depending on where the user was logged in. The new system closes that gap. Most components are shared. Only truly platform-specific patterns — share sheets, system pickers, status bars — stay native. A user moving between their phone and the browser recognises the same product, not a reinterpretation of it.</p>
+  </div>
+  <div class="media reveal">
+    <div class="video-wrap">
+      <video width="1280" height="936" src="assets/b2broker/bb-008.mp4" class="media-img" autoplay loop muted playsinline preload="metadata"
+             aria-label="B2broker — iOS and Android side by side" data-i18n-aria-en="B2broker — iOS and Android side by side" data-i18n-aria-ru="B2broker — iOS и Android рядом"></video>
+      <button class="speed-btn" type="button" aria-label="Playback speed">1<span class="x">×</span></button>
+    </div>
+    <div class="caption" data-i18n-en="iOS and Android — same experience, native on both." data-i18n-ru="iOS и Android — одно ощущение от продукта, нативно на обеих платформах.">iOS and Android — same experience, native on both.</div>
+  </div>
+  <!-- Token system -->
+  <div class="col reveal">
+    <h2 class="section" data-i18n-en="The token system — what it was all for" data-i18n-ru="Система токенов — то, ради чего всё">The token system — what it was all for</h2>
+    <p data-i18n-en="All the pieces above feed into one engine. The same Button component knows how to look on iOS, on Android, and on the web — the platform layer is a token swap, not a redesign. The same Input adopts the typography scale of whichever broker is rendering it. Brand customisation lives in one tokens file per broker — colour, accent, illustration style, shape language. The engine reads it and dresses itself." data-i18n-ru="Все куски выше сходятся в один движок. Один и тот же компонент Button умеет выглядеть по-своему на iOS, на Android и на вебе — переключение платформы превращается в подмену токенов, а не в новый дизайн. Тот же Input берёт типографическую шкалу того брокера, который сейчас отрисовывается. Кастомизация бренда сводится к одному файлу токенов на брокера — цвет, акцент, стиль иллюстраций, язык форм. Движок читает этот файл и сам одевается.">All the pieces above feed into one engine. The same Button component knows how to look on iOS, on Android, and on the web — the platform layer is a token swap, not a redesign. The same Input adopts the typography scale of whichever broker is rendering it. Brand customisation lives in one tokens file per broker — colour, accent, illustration style, shape language. The engine reads it and dresses itself.</p>
+    <p data-i18n-en="This is the part that took the longest to land and pays back the most. The handful of platform-specific things that have to be platform-specific stay platform-specific. Everything else — the bulk of the product — is one set of components, dressed by tokens." data-i18n-ru="Это была самая трудоёмкая часть работы — и одновременно та, что даёт больше всего отдачи. Те немногие вещи, которые действительно должны быть платформо-специфичными, такими и остались. Всё остальное — большая часть продукта — это один набор компонентов, который токены переодевают под нужный контекст.">This is the part that took the longest to land and pays back the most. The handful of platform-specific things that have to be platform-specific stay platform-specific. Everything else — the bulk of the product — is one set of components, dressed by tokens.</p>
+  </div>
+  <div class="media reveal">
+    <div class="video-wrap">
+      <video width="1280" height="936" src="assets/b2broker/bb-009.mp4" class="media-img" autoplay loop muted playsinline preload="metadata"
+             aria-label="B2broker visual system" data-i18n-aria-en="B2broker visual system" data-i18n-aria-ru="B2broker — визуальная система"></video>
+      <button class="speed-btn" type="button" aria-label="Playback speed">1<span class="x">×</span></button>
+    </div>
+    <div class="caption" data-i18n-en="One visual engine, many brands — customisable by token." data-i18n-ru="Один движок, много брендов — настраивается через токены.">One visual engine, many brands — customisable by token.</div>
+  </div>
+  <div class="col reveal">
+    <p class="pullquote" data-i18n-en="What looked like a redesign was, underneath, a tokens-engineering project. The screens were a downstream effect." data-i18n-ru="То, что выглядело как редизайн, по сути было работой над системой токенов. Экраны — лишь следствие.">What looked like a redesign was, underneath, a tokens-engineering project. The screens were a downstream effect.</p>
+  </div>
+  <!-- Scaling -->
+  <div class="col reveal">
+    <h2 class="section" data-i18n-en="From solo to a team" data-i18n-ru="От одиночки к команде">From solo to a team</h2>
+    <p data-i18n-en="Phase one — design system, main flows, customisation engine — ran solo. Once the visual style and the mechanics held together, the team grew to five designers. Phase two was a different shape of work: deep component reviews, missing states, edge cases, the long tail of specialised components nobody needs until they suddenly do. Engineers joined for implementation. The hand-off stopped being a meeting and became a thing the codebase grew into." data-i18n-ru="Первая фаза — дизайн-система, основные сценарии, движок кастомизации — шла в одиночку. Когда визуальный стиль и механики устоялись, команда выросла до пяти дизайнеров. Вторая фаза имела другую форму: плотные ревью компонентов, недостающие стейты, граничные кейсы, длинный хвост специализированных компонентов, которые никому не нужны — пока вдруг не понадобятся. Параллельно подключились разработчики — на имплементацию. Хэндофф перестал быть отдельной встречей и стал процессом, в который постепенно прорастал кодбейс.">Phase one — design system, main flows, customisation engine — ran solo. Once the visual style and the mechanics held together, the team grew to five designers. Phase two was a different shape of work: deep component reviews, missing states, edge cases, the long tail of specialised components nobody needs until they suddenly do. Engineers joined for implementation. The hand-off stopped being a meeting and became a thing the codebase grew into.</p>
+  </div>
+  <div class="col reveal">
+    <div class="stat-callout">
+      <div class="num" data-i18n-en="1 → 5" data-i18n-ru="1 → 5">1 → 5</div>
+      <div class="text" data-i18n-en="Designers on the project. Solo through phase one — design system, main flows, customisation engine. A five-person team after, for the component long tail and engineering implementation." data-i18n-ru="Дизайнеров на проекте. На первой фазе — в одиночку: дизайн-система, основные сценарии, движок кастомизации. На второй — команда из пятерых: длинный хвост компонентов и совместная работа с разработкой над реализацией.">Designers on the project. Solo through phase one — design system, main flows, customisation engine. A five-person team after, for the component long tail and engineering implementation.</div>
+    </div>
+  </div>
+  <!-- Lessons -->
+  <div class="col reveal">
+    <h2 class="section" data-i18n-en="What I carry forward" data-i18n-ru="Что я унёс из этого кейса">What I carry forward</h2>
+    <p data-i18n-en="Two things that travelled out of this case into the next ones." data-i18n-ru="Две вещи, которые забрал с собой в следующие проекты.">Two things that travelled out of this case into the next ones.</p>
+  </div>
+  <div class="col reveal">
+    <div class="lesson-row">
+      <div class="ls">
+        <div class="ls-num" data-i18n-en="Lesson 01" data-i18n-ru="Урок 01">Lesson 01</div>
+        <div class="ls-title" data-i18n-en="Audit before any pencil" data-i18n-ru="Прежде чем рисовать — аудит">Audit before any pencil</div>
+        <div class="ls-note" data-i18n-en="On a redesign at this scale the audit isn't a nice-to-have — it is the work. The hour spent cataloguing every variant, token, and icon before drawing anything saves weeks of work later: the moment duplicates are on the same wall, they don't need a new design — they need a delete." data-i18n-ru="На редизайне такого масштаба аудит — это не «было бы неплохо», это и есть работа. Час, потраченный на инвентаризацию всех вариантов, токенов и иконок до первого эскиза, экономит недели работы дальше: как только дубликаты оказываются на одной стене, им нужен не новый дизайн — им нужно удаление.">On a redesign at this scale the audit isn't a nice-to-have — it is the work. The hour spent cataloguing every variant, token, and icon before drawing anything saves weeks of work later: the moment duplicates are on the same wall, they don't need a new design — they need a delete.</div>
+      </div>
+      <div class="ls">
+        <div class="ls-num" data-i18n-en="Lesson 02" data-i18n-ru="Урок 02">Lesson 02</div>
+        <div class="ls-title" data-i18n-en="Tokens are the system" data-i18n-ru="Токены — это и есть система">Tokens are the system</div>
+        <div class="ls-note" data-i18n-en="What looked like a visual redesign was really a token engineering problem. Get the tokens right and a thousand screens fall into place." data-i18n-ru="То, что выглядело как визуальный редизайн, по сути было задачей про токены. Собери их правильно — и тысяча экранов встанет сама собой.">What looked like a visual redesign was really a token engineering problem. Get the tokens right and a thousand screens fall into place.</div>
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<footer class="site"></footer>
+
+<script>
+  window.PAGE = {
+    en: {
+      title: "B2broker",
+      date:  "March 2025",
+      meta:  "2025 · Fintech · Mobile · Web · Product Design"
+    },
+    ru: {
+      title: "B2broker",
+      date:  "Март 2025",
+      meta:  "2025 · Финтех · Мобильное · Веб · Продуктовый дизайн"
+    }
+  };
+</script>
+<!-- SHARED:JS -->
+<script>
+/* ────────────────────────────────────────────────
+   Shared scripts for all internal project pages.
+   Renders the Header + Footer, wires up theme &
+   language toggles. Each page declares window.PAGE
+   with its own title/subtitle/meta (EN + RU).
+   ──────────────────────────────────────────────── */
+
+(function () {
+  // ── Inherit theme/accent/serif from Portfolio's Tweaks (set on <html> in pre-boot) ──
+  try {
+    const saved = JSON.parse(localStorage.getItem("petr_tweaks") || "null");
+    if (saved) {
+      if (saved.theme)  document.documentElement.dataset.theme  = saved.theme;
+      if (saved.accent) document.documentElement.dataset.accent = saved.accent;
+      if (saved.serif)  document.documentElement.dataset.serif  = saved.serif;
+    } else {
+      document.documentElement.dataset.theme  = "light";
+      document.documentElement.dataset.accent = "ink";
+    }
+  } catch(e) {}
+
+  const LOGO_SVG = `<svg width="36" height="36" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="Petr Petryaev"><path d="M16.5625 36.7241V27.8342C16.5625 27.6496 16.7121 27.5 16.8967 27.5H26.0937C30.1496 27.5 33.4375 24.2121 33.4375 20.1562C33.4375 16.1004 30.1496 12.8125 26.0937 12.8125H17.7444C16.9876 12.8125 16.2619 12.5119 15.7268 11.9768L9.40403 5.65403C9.39332 5.64332 9.4009 5.625 9.41605 5.625H18.75C22.8921 5.625 26.25 8.98286 26.25 13.125C26.25 17.2671 22.8921 20.625 18.75 20.625H9.70916C9.52461 20.625 9.375 20.7746 9.375 20.9592L9.375 28.9108C9.375 29.4081 9.57254 29.885 9.92417 30.2367L16.4558 36.7683C16.4952 36.8077 16.5625 36.7798 16.5625 36.7241Z" stroke="currentColor" stroke-width="3.125"/></svg>`;
+
+  const SUN_SVG = `<svg class="ic ic-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>`;
+  const MOON_SVG = `<svg class="ic ic-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>`;
+
+  const HEADER_HTML = `
+    <div class="wrap inner">
+      <a href="Portfolio.html" class="brand"><span class="mark">${LOGO_SVG}</span></a>
+      <nav class="site">
+        <a href="mailto:petryaev.p@gmail.com" class="cta" id="cta-btn">Get in touch ↗</a>
+        <button class="theme-toggle" id="theme-toggle" aria-label="Toggle theme" title="Toggle theme">
+          ${SUN_SVG}${MOON_SVG}
+        </button>
+        <span class="lang"><button class="lng" id="lang-btn" aria-label="Switch language">RU</button></span>
+      </nav>
+    </div>`;
+
+  const FOOTER_HTML = `
+    <div class="wrap">
+      <div class="links reveal">
+        <a href="https://www.linkedin.com/in/peter-petryaev-818532b3" target="_blank" rel="noopener">LinkedIn</a>
+        <a href="https://dribbble.com/petrPetr" target="_blank" rel="noopener">Dribbble</a>
+        <a href="https://t.me/petr_petryaev" target="_blank" rel="noopener">Telegram</a>
+        <a href="mailto:petryaev.p@gmail.com">petryaev.p@gmail.com</a>
+      </div>
+      <div class="copy reveal">© 2026 · Petr Petryaev</div>
+    </div>`;
+
+  function renderHero() {
+    const host = document.getElementById("p-hero");
+    if (!host) return;
+    const title = (window.PAGE && window.PAGE.en && window.PAGE.en.title) || document.title;
+    const date  = (window.PAGE && window.PAGE.en && window.PAGE.en.date) || "";
+    const meta  = (window.PAGE && window.PAGE.en && window.PAGE.en.meta) || "";
+
+    // Split meta: "2025 · Mobile · Health · Product Design"
+    // → year / industry (middle parts) / role (last part)
+    const parts = meta.split(" · ").map(s => s.trim()).filter(Boolean);
+    const year     = parts[0] || "";
+    const role     = parts.length >= 2 ? parts[parts.length - 1] : "";
+    const industry = parts.length >= 3 ? parts.slice(1, -1).join(" · ") : (parts[1] || "");
+
+    host.innerHTML = `
+      <h1 class="p-title reveal" style="--reveal-delay: 80ms">${title}</h1>
+      <div class="p-hero-meta">
+        <div class="reveal" style="--reveal-delay: 220ms">
+          <div class="label" data-i18n-kicker="year">Year</div>
+          <div class="val"><strong>${year}</strong></div>
+        </div>
+        <div class="reveal" style="--reveal-delay: 300ms">
+          <div class="label" data-i18n-kicker="industry">Industry</div>
+          <div class="val"><strong>${industry}</strong></div>
+        </div>
+        <div class="reveal" style="--reveal-delay: 380ms">
+          <div class="label" data-i18n-kicker="role">Role</div>
+          <div class="val"><strong>${role}</strong></div>
+        </div>
+      </div>
+    `;
+  }
+
+  // ── Prev / Next navigation ──
+  // Order matches the Works index on Portfolio.html
+  const PROJECTS_ORDER = [
+    { slug: "b2broker",          en: "B2broker",          ru: "B2broker" },
+    { slug: "b2broker-deposit",  en: "B2broker Deposit",  ru: "B2broker Депозит" },
+    { slug: "isp-cabinet",       en: "ISP cabinet",       ru: "Кабинет провайдера" },
+    { slug: "nowline",           en: "Nowline",           ru: "Nowline" },
+    { slug: "stepafter",         en: "Stepafter",         ru: "Stepafter" },
+    { slug: "flowhealth-web",    en: "Adia Provider Portal", ru: "Adia Provider Portal" },
+    { slug: "flowhealth-mobile", en: "FlowHealth Patient", ru: "FlowHealth Patient" },
+    { slug: "flowhealth-lis",    en: "FlowHealth LIS",    ru: "FlowHealth LIS" },
+    { slug: "fh-collector",      en: "FlowHealth Collector", ru: "FlowHealth Collector" },
+    { slug: "mstv-ios",          en: "MSTV iOS App",      ru: "MSTV iOS App" },
+    { slug: "mstv-tv",           en: "MSTV TV",           ru: "MSTV TV" },
+    { slug: "motorsport-live",   en: "Motorsport Live",   ru: "Motorsport Live" },
+    { slug: "domyland",          en: "Domyland",          ru: "Domyland" },
+    { slug: "nexar",             en: "Nexar",             ru: "Nexar" },
+    { slug: "ultracast",         en: "Ultracast",         ru: "Ultracast" },
+    { slug: "about-the-fit",     en: "About The Fit",     ru: "About The Fit" },
+    { slug: "allie-go",          en: "Allie Go",          ru: "Allie Go" },
+    { slug: "allie-home",        en: "Allie Home",        ru: "Allie Home" },
+    { slug: "ic-mycloud",        en: "IC MyCloud",        ru: "IC MyCloud" },
+    { slug: "etrustie",          en: "eTrustie",          ru: "eTrustie" },
+    { slug: "caishen",           en: "Caishen",           ru: "Caishen" },
+  ];
+  function currentSlug() {
+    const m = location.pathname.match(/\/([^\/]+)\.html?$/i);
+    return m ? m[1] : "";
+  }
+  function renderProjectNav() {
+    const article = document.querySelector("main.article");
+    if (!article) return;
+    // don't double-inject
+    if (article.querySelector(".p-nav")) return;
+
+    const slug = currentSlug();
+    const idx = PROJECTS_ORDER.findIndex(p => p.slug === slug);
+    if (idx === -1) return;
+    const prev = idx > 0 ? PROJECTS_ORDER[idx - 1] : null;
+    const next = idx < PROJECTS_ORDER.length - 1 ? PROJECTS_ORDER[idx + 1] : null;
+
+    const prevKicker = { en: "Previous", ru: "Предыдущий" };
+    const nextKicker = { en: "Next",     ru: "Следующий" };
+
+    const nav = document.createElement("nav");
+    nav.className = "p-nav reveal";
+    nav.innerHTML = `
+      ${prev ? `
+        <a class="prev" href="${prev.slug}.html">
+          <div class="preview"><img src="assets/previews/${prev.slug}.jpg" alt="" loading="lazy"></div>
+          <div class="p-nav-kicker" data-i18n-en="${prevKicker.en}" data-i18n-ru="${prevKicker.ru}">${prevKicker.en}</div>
+          <div class="p-nav-title" data-i18n-en="${prev.en}" data-i18n-ru="${prev.ru}">${prev.en}</div>
+        </a>
+      ` : `<div></div>`}
+      ${next ? `
+        <a class="next" href="${next.slug}.html">
+          <div class="preview"><img src="assets/previews/${next.slug}.jpg" alt="" loading="lazy"></div>
+          <div class="p-nav-kicker" data-i18n-en="${nextKicker.en}" data-i18n-ru="${nextKicker.ru}">${nextKicker.en}</div>
+          <div class="p-nav-title" data-i18n-en="${next.en}" data-i18n-ru="${next.ru}">${next.en}</div>
+        </a>
+      ` : `<div></div>`}
+    `;
+    article.appendChild(nav);
+  }
+
+  // Render header / footer shells
+  document.addEventListener("DOMContentLoaded", () => {
+    const h = document.querySelector("header.site");
+    const f = document.querySelector("footer.site");
+    if (h) h.innerHTML = HEADER_HTML;
+    if (f) f.innerHTML = FOOTER_HTML;
+    renderHero();
+    renderProjectNav();
+    bind();
+    applyLang(curLang);
+    bindBaToggles();
+    if (window.__attachReveal) window.__attachReveal();
+  });
+
+  // ── Before / After toggle ──
+  function bindBaToggles() {
+    document.querySelectorAll('.media-toggle').forEach(group => {
+      const tabs = group.querySelectorAll('.ba-tab');
+      const imgs = group.querySelectorAll('.ba-img');
+      tabs.forEach(tab => {
+        tab.addEventListener('click', () => {
+          const v = tab.dataset.ba;
+          tabs.forEach(t => t.classList.toggle('is-active', t.dataset.ba === v));
+          imgs.forEach(i => i.classList.toggle('is-active', i.dataset.ba === v));
+        });
+      });
+    });
+  }
+
+  // ── Theme toggle ──
+  function applyTheme(t) {
+    document.documentElement.dataset.theme = t;
+    try {
+      const saved = JSON.parse(localStorage.getItem("petr_tweaks") || "{}");
+      saved.theme = t;
+      localStorage.setItem("petr_tweaks", JSON.stringify(saved));
+    } catch(e) {}
+  }
+
+  // ── Lang toggle ──
+  let curLang = localStorage.getItem("petr_lang") || "en";
+  function applyLang(l) {
+    curLang = l;
+    localStorage.setItem("petr_lang", l);
+    document.documentElement.lang = l;
+    const d = (window.PAGE && window.PAGE[l]) || {};
+    const tEl = document.querySelector(".p-title");  if (tEl && d.title) tEl.textContent = d.title;
+
+    // Hero meta (3-col grid): year | industry | role
+    const heroMeta = document.querySelector(".p-hero-meta");
+    if (heroMeta && d.meta) {
+      const parts = d.meta.split(" · ").map(s => s.trim()).filter(Boolean);
+      const year     = parts[0] || "";
+      const role     = parts.length >= 2 ? parts[parts.length - 1] : "";
+      const industry = parts.length >= 3 ? parts.slice(1, -1).join(" · ") : (parts[1] || "");
+      const kickers = l === "ru"
+        ? { year: "Год",  industry: "Индустрия", role: "Роль" }
+        : { year: "Year", industry: "Industry",  role: "Role" };
+      heroMeta.innerHTML = `
+        <div>
+          <div class="label">${kickers.year}</div>
+          <div class="val"><strong>${year}</strong></div>
+        </div>
+        <div>
+          <div class="label">${kickers.industry}</div>
+          <div class="val"><strong>${industry}</strong></div>
+        </div>
+        <div>
+          <div class="label">${kickers.role}</div>
+          <div class="val"><strong>${role}</strong></div>
+        </div>
+      `;
+    }
+    const cta = document.getElementById("cta-btn");
+    if (cta) cta.textContent = l === "en" ? "Get in touch ↗" : "Связаться ↗";
+    const btn = document.getElementById("lang-btn");
+    if (btn) btn.textContent = l === "en" ? "EN" : "RU";
+    if (d.title) document.title = `${d.title} · Petr Petryaev`;
+
+    // Body-scoped i18n: swap text on any element with data-i18n-<lang>
+    document.querySelectorAll("[data-i18n-en]").forEach(el => {
+      const other = l === "en" ? "en" : "ru";
+      const val = el.getAttribute(`data-i18n-${other}`);
+      if (val !== null) el.innerHTML = val;
+    });
+  }
+
+  function bind() {
+    const tt = document.getElementById("theme-toggle");
+    if (tt) tt.addEventListener("click", () => {
+      const cur = document.documentElement.dataset.theme || "light";
+      applyTheme(cur === "dark" ? "light" : "dark");
+    });
+    const lb = document.getElementById("lang-btn");
+    if (lb) lb.addEventListener("click", () => applyLang(curLang === "en" ? "ru" : "en"));
+  }
+})();
+
+</script>
+<!-- /SHARED:JS -->
+<!-- SHARED:NPROG -->
+<script>
+/* ─── Page transition progress bar (nprog-style) ─── */
+(function () {
+  const BAR_ID = "__petr_nprog";
+  const DURATION_IN  = 600;   // quick ramp on click
+  const STALL_AT     = 0.88;  // stall position while waiting for next page
+  const STALL_MS     = 1200;  // slow creep from stall to 0.95 while waiting
+  const DONE_MS      = 260;   // animate to 100% on arrival
+  const FADE_MS      = 280;   // then fade out
+
+  function ensureBar() {
+    let el = document.getElementById(BAR_ID);
+    if (el) return el;
+    el = document.createElement("div");
+    el.id = BAR_ID;
+    el.setAttribute("aria-hidden", "true");
+    document.body.appendChild(el);
+    // Force reflow so initial transforms animate properly
+    void el.offsetWidth;
+    return el;
+  }
+
+  function setProgress(el, p, durMs, easing) {
+    el.style.transition = `transform ${durMs}ms ${easing || "cubic-bezier(.2,.8,.2,1)"}, opacity ${FADE_MS}ms linear`;
+    el.style.transform  = `scaleX(${p})`;
+  }
+
+  function start() {
+    const el = ensureBar();
+    el.style.opacity = "1";
+    // 0 → STALL_AT quickly with easing
+    setProgress(el, 0, 0, "linear");
+    // force paint at 0
+    void el.offsetWidth;
+    setProgress(el, STALL_AT, DURATION_IN);
+    // slow creep from STALL_AT → 0.95
+    setTimeout(() => {
+      const cur = document.getElementById(BAR_ID);
+      if (cur) setProgress(cur, 0.95, STALL_MS, "cubic-bezier(.2,.6,.2,1)");
+    }, DURATION_IN + 20);
+  }
+
+  function finishAndFade() {
+    const el = ensureBar();
+    el.style.opacity = "1";
+    setProgress(el, 1, DONE_MS, "cubic-bezier(.2,.8,.2,1)");
+    setTimeout(() => {
+      el.style.opacity = "0";
+      setTimeout(() => { el.remove(); }, FADE_MS + 50);
+    }, DONE_MS + 30);
+  }
+
+  // On arrival: if we navigated from an internal link, resume → finish
+  function boot() {
+    let navigated = false;
+    try { navigated = sessionStorage.getItem("__petr_navigating") === "1"; } catch(e) {}
+    if (navigated) {
+      try { sessionStorage.removeItem("__petr_navigating"); } catch(e) {}
+      const el = ensureBar();
+      el.style.opacity = "1";
+      // Start already high (give the impression of continuity)
+      setProgress(el, STALL_AT, 0, "linear");
+      void el.offsetWidth;
+      // Then complete
+      requestAnimationFrame(finishAndFade);
+    }
+  }
+
+  // Intercept internal link clicks to kick off the progress bar
+  function isInternalAnchor(a) {
+    if (!a || a.tagName !== "A") return false;
+    const href = a.getAttribute("href");
+    if (!href) return false;
+    if (a.target && a.target !== "" && a.target !== "_self") return false;
+    if (href.startsWith("#")) return false;
+    if (/^(mailto:|tel:|javascript:)/i.test(href)) return false;
+    // Absolute URL on same origin, or relative
+    try {
+      const url = new URL(href, location.href);
+      if (url.origin !== location.origin) return false;
+      // same page? skip
+      if (url.pathname === location.pathname && url.search === location.search) return false;
+      return true;
+    } catch(e) { return false; }
+  }
+
+  document.addEventListener("click", (e) => {
+    if (e.defaultPrevented) return;
+    if (e.button !== 0) return;
+    if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+    let t = e.target;
+    while (t && t !== document.body && t.tagName !== "A") t = t.parentElement;
+    if (!isInternalAnchor(t)) return;
+    try { sessionStorage.setItem("__petr_navigating", "1"); } catch(e) {}
+    start();
+  }, true);
+
+  // Back/forward cache: treat BFCache restore as arrival too
+  window.addEventListener("pageshow", (e) => {
+    if (e.persisted) {
+      const el = document.getElementById(BAR_ID);
+      if (el) { el.style.opacity = "0"; setTimeout(() => el.remove(), FADE_MS); }
+    }
+  });
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", boot);
+  } else {
+    boot();
+  }
+})();
+
+/* ─── Video speed control (1× → 2× → 0.5×) ─── */
+(function () {
+  const CYCLE = [1, 2, 0.5];
+  const LABEL = { 1: "1", 2: "2", 0.5: "0.5" };
+  document.querySelectorAll(".video-wrap").forEach(wrap => {
+    const video = wrap.querySelector("video");
+    const btn   = wrap.querySelector(".speed-btn");
+    if (!video || !btn) return;
+    let i = 0;
+    btn.addEventListener("click", () => {
+      i = (i + 1) % CYCLE.length;
+      const rate = CYCLE[i];
+      video.playbackRate = rate;
+      btn.innerHTML = LABEL[rate] + '<span class="x">×</span>';
+    });
+  });
+})();
+</script>
+<!-- /SHARED:NPROG -->
+<!-- SHARED:VIDEO-LAZY -->
+<script>
+/* Lazy-load + pause-off-screen for <video>
+   — metadata/body fetched only when video is near viewport
+   — playback paused when scrolled out */
+(function () {
+  if (!('IntersectionObserver' in window)) return;
+  const vids = document.querySelectorAll('video');
+  if (!vids.length) return;
+
+  vids.forEach(v => {
+    if (v.hasAttribute('src')) {
+      v.dataset.src = v.getAttribute('src');
+      v.removeAttribute('src');
+    }
+    v.querySelectorAll('source[src]').forEach(s => {
+      s.dataset.src = s.getAttribute('src');
+      s.removeAttribute('src');
+    });
+    v.setAttribute('preload', 'none');
+    v.removeAttribute('autoplay');
+    v._loaded = false;
+  });
+
+  const activate = v => {
+    if (v._loaded) return;
+    if (v.dataset.src) v.src = v.dataset.src;
+    v.querySelectorAll('source[data-src]').forEach(s => { s.src = s.dataset.src; });
+    v.load();
+    v._loaded = true;
+  };
+
+  const io = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      const v = e.target;
+      if (e.isIntersecting) {
+        activate(v);
+        const p = v.play();
+        if (p && typeof p.catch === 'function') p.catch(() => {});
+      } else if (!v.paused) {
+        v.pause();
+      }
+    });
+  }, { rootMargin: '200px 0px', threshold: 0.01 });
+
+  vids.forEach(v => io.observe(v));
+})();
+</script>
+<!-- /SHARED:VIDEO-LAZY -->
+
+<script>
+/* ───────── Reveal animations ───────── */
+(function() {
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (reduce) {
+    document.querySelectorAll('.reveal').forEach(el => el.classList.add('is-in'));
+    return;
+  }
+
+  let lastFire = 0;
+  let batchIndex = 0;
+
+  const io = new IntersectionObserver((entries, obs) => {
+    const now = performance.now();
+    if (now - lastFire > 150) batchIndex = 0;
+    lastFire = now;
+
+    for (const e of entries) {
+      if (!e.isIntersecting) continue;
+      if (!e.target.style.getPropertyValue('--reveal-delay')) {
+        e.target.style.setProperty('--reveal-delay', (batchIndex * 60) + 'ms');
+      }
+      e.target.classList.add('is-in');
+      obs.unobserve(e.target);
+      batchIndex++;
+    }
+  }, { rootMargin: '0px', threshold: 0.1 });
+
+  function attach(scope) {
+    (scope || document).querySelectorAll('.reveal:not(.is-in)').forEach(el => io.observe(el));
+  }
+
+  window.__attachReveal = attach;
+  if (document.readyState !== "loading") attach();
+})();
+</script>
+<!-- CASE:JS -->
+<script>
+(() => {
+  const SUB = {"b2broker": ["Brokerage mobile app", "Мобильное приложение брокера"], "b2broker-deposit": ["Deposit flow — conversion lift", "Флоу депозита — рост конверсии"], "nowline": ["Day planner for iOS", "Планировщик дня для iOS"], "isp-cabinet": ["Self-care cabinet of a home internet provider", "Личный кабинет интернет-провайдера"], "stepafter": ["Post-activity coaching companion", "Напоминания после тренировки"], "flowhealth-web": ["Clinician workspace", "Рабочее место врача"], "flowhealth-mobile": ["Patient-side iOS app", "iOS-приложение для пациента"], "flowhealth-lis": ["Lab information system", "Лабораторная система"], "fh-collector": ["Phlebotomist field iOS app", "Выездной сбор анализов"], "mstv-ios": ["Consumer news app", "Новостное приложение"], "mstv-tv": ["10-foot UI for smart TVs", "Интерфейс для смарт-ТВ"], "motorsport-live": ["Race weekend tickets & travel", "Билеты и поездки на гонки"], "domyland": ["Resident-first building app", "Приложение для жителей дома"], "nexar": ["Dashcam companion app", "Приложение к видеорегистратору"], "ultracast": ["Live-streaming companion app", "Приложение для лайв-стримов"], "about-the-fit": ["Retail fitting experience", "Примерочная в приложении"], "allie-go": ["Mobile security camera", "Мобильная камера безопасности"], "allie-home": ["Smart-home companion", "Управление умным домом"], "ic-mycloud": ["Cloud video management", "Облачное видеонаблюдение"], "etrustie": ["Trust services platform", "Платформа доверительных услуг"], "caishen": ["Mobile gaming platform", "Мобильная игровая платформа"]};
+  function build() {
+    const hero = document.getElementById("p-hero");
+    if (!hero || hero.dataset.case) return;
+    hero.dataset.case = "1";
+    const ru = document.documentElement.lang === "ru";
+    const slug = (location.pathname.match(/\/([^\/]+)\.html?$/i) || [])[1] || "";
+    const make = (tag, cls, en, ruText) => {
+      const el = document.createElement(tag);
+      el.className = cls;
+      el.setAttribute("data-i18n-en", en);
+      el.setAttribute("data-i18n-ru", ruText);
+      el.textContent = ru ? ruText : en;
+      return el;
+    };
+    const title = hero.querySelector(".p-title");
+    const sub = SUB[slug];
+    if (title && sub) {
+      title.after(make("p", "p-sub", sub[0], sub[1]));
+      hero.classList.add("has-sub");
+    }
+    const lede = document.querySelector("main .col p.lede");
+    const meta = hero.querySelector(".p-hero-meta");
+    if (lede && meta) {
+      const box = document.createElement("div");
+      box.className = "p-summary";
+      const from = lede.closest(".col");
+      const intro = [];  // paragraphs right after the lede belong to the summary too
+      for (let n = lede.nextElementSibling; n && n.tagName === "P"; n = n.nextElementSibling) intro.push(n);
+      box.append(make("p", "p-summary-k", "Summary", "Коротко"), lede, ...intro);
+      hero.insertBefore(box, meta);
+      if (from && !from.textContent.trim()) from.remove();
+    }
+  }
+  // MacBook carousels (the module from flowhealth-lis.html): arrows, ← →, a sideways swipe. SHARED:JS swaps only
+  // innerHTML, so captions, alt and aria-labels follow the language here. A click or Enter zooms a screen.
+  function laptops() {
+    const root = document.documentElement, ru = () => root.lang === "ru", redraw = [];
+    document.querySelectorAll("main [data-carousel]").forEach(c => {
+      const shots = [...c.querySelectorAll(".shot")];
+      const count = c.querySelector(".car-count"), cap = c.querySelector(".car-title");
+      let i = 0;
+      const show = () => {
+        shots.forEach((s, k) => { s.hidden = k !== i; });
+        if (count) count.textContent = `${i + 1} / ${shots.length}`;
+        if (cap) cap.textContent = (ru() && shots[i].dataset.titleRu) || shots[i].dataset.title || "";
+        c.querySelectorAll(".car-notes[data-i]").forEach(o => { o.hidden = Number(o.dataset.i) !== i; });
+      };
+      const step = d => { i = (i + d + shots.length) % shots.length; show(); };
+      redraw.push(show);
+      c.querySelectorAll("[data-step]").forEach(b => b.addEventListener("click", () => step(Number(b.dataset.step))));
+      c.addEventListener("keydown", ev => {
+        if (ev.key !== "ArrowLeft" && ev.key !== "ArrowRight") return;
+        ev.preventDefault();
+        step(ev.key === "ArrowLeft" ? -1 : 1);
+      });
+      let x0 = null, y0 = 0;
+      const screen = c.querySelector(".mbp-screen");
+      screen.addEventListener("touchstart", ev => { x0 = ev.touches[0].clientX; y0 = ev.touches[0].clientY; }, { passive: true });
+      screen.addEventListener("touchend", ev => {
+        if (x0 === null) return;
+        const dx = ev.changedTouches[0].clientX - x0, dy = ev.changedTouches[0].clientY - y0;
+        x0 = null;
+        if (Math.abs(dx) > 40 && Math.abs(dx) > Math.abs(dy)) step(dx < 0 ? 1 : -1);
+      }, { passive: true });
+    });
+    const relang = () => {
+      [["alt", "alt"], ["aria-label", "ariaLabel"]].forEach(([attr, k]) =>
+        document.querySelectorAll(`main [data-${attr}-ru]`).forEach(el => el.setAttribute(attr, el.dataset[k + (ru() ? "Ru" : "En")])));
+      redraw.forEach(f => f());
+    };
+    new MutationObserver(relang).observe(root, { attributes: true, attributeFilter: ["lang"] });
+    relang();
+
+    const zoomable = "main img[data-zoom]";
+    if (!document.querySelector(zoomable)) return;
+    document.querySelectorAll(zoomable).forEach(im => { im.tabIndex = 0; im.setAttribute("role", "button"); });
+    const lb = document.createElement("div");
+    lb.className = "case-lb";
+    lb.hidden = true;
+    lb.setAttribute("role", "dialog");
+    lb.setAttribute("aria-modal", "true");
+    lb.innerHTML = '<button class="case-lb-close" type="button">×</button><img alt="">';
+    document.body.appendChild(lb);
+    const big = lb.querySelector("img"), shut = lb.querySelector("button");
+    let opener = null;
+    const open = im => {
+      opener = im;
+      big.src = im.dataset.zoom;
+      big.alt = im.alt;
+      lb.setAttribute("aria-label", im.alt);
+      shut.setAttribute("aria-label", ru() ? "Закрыть" : "Close");
+      lb.hidden = false;
+      lb.scrollTop = 0;
+      root.style.overflow = "hidden";
+      shut.focus();
+      requestAnimationFrame(() => { lb.scrollLeft = (lb.scrollWidth - lb.clientWidth) / 2; });
+    };
+    const close = () => { lb.hidden = true; root.style.overflow = ""; if (opener) opener.focus(); };
+    document.addEventListener("click", ev => {
+      if (!lb.hidden) { close(); return; }
+      const im = ev.target.closest(zoomable);
+      if (im) open(im);
+    });
+    document.addEventListener("keydown", ev => {
+      if (!lb.hidden) {
+        if (ev.key === "Escape") close();
+        if (ev.key === "Tab") { ev.preventDefault(); shut.focus(); }
+        return;
+      }
+      const im = ev.target.closest && ev.target.closest(zoomable);
+      if (im && (ev.key === "Enter" || ev.key === " ")) { ev.preventDefault(); open(im); }
+    });
+  }
+  // A page can list its own header facts (window.PAGE.<lang>.facts = [{label, value}]) instead of the year /
+  // industry / role split of its meta line. SHARED:JS redraws the header on a language switch, so this runs after it.
+  function facts() {
+    const box = document.querySelector("main .p-hero .p-hero-meta");
+    const pick = () => ((window.PAGE || {})[document.documentElement.lang === "ru" ? "ru" : "en"] || {}).facts;
+    if (!box || !pick()) return;
+    const esc = t => String(t).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]);
+    const draw = () => {
+      const list = pick();
+      if (list) box.innerHTML = list.map(f =>
+        `<div><div class="label">${esc(f.label)}</div><div class="val"><strong>${esc(f.value)}</strong></div></div>`).join("");
+    };
+    draw();
+    new MutationObserver(draw).observe(document.documentElement, { attributes: true, attributeFilter: ["lang"] });
+  }
+  // phones fold the long text (details.mfold); wider screens keep it open, and its line doesn't toggle there
+  function folds() {
+    const all = [...document.querySelectorAll("main details.mfold")];
+    if (!all.length) return;
+    const narrow = matchMedia("(max-width: 600px)");
+    const set = () => all.forEach(d => { d.open = !narrow.matches; });
+    all.forEach(d => d.querySelector("summary").addEventListener("click", ev => { if (!narrow.matches) ev.preventDefault(); }));
+    set();
+    narrow.addEventListener("change", set);
+  }
+  const run = () => { build(); facts(); laptops(); folds(); };
+  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", run);
+  else run();
+})();
+</script>
+<!-- /CASE:JS -->
+</body>
+</html>

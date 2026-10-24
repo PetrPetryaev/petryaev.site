@@ -1,0 +1,7 @@
+User-agent: *
+Allow: /
+Disallow: /_review/
+Disallow: /uploads/
+Disallow: /screenshots/
+
+Sitemap: https://petryaev.site/sitemap.xml
